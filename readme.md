@@ -1,6 +1,6 @@
 # FischBotDiscord-csharp
 
-![FischBot Icon](FischBotIcon.png)
+<img src="FischBotIcon.png" width="250px" alt="FischBot Icon">
 
 A Discord bot using Discord.NET.
 
