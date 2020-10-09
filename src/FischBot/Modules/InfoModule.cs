@@ -37,7 +37,7 @@ namespace Fischbot.Modules
                     .WithValue(command.Summary));
 
             var embed = new EmbedBuilder()
-                .WithTitle("Fischbot Supported Commands")
+                .WithTitle("FischBot Supported Commands")
                 .WithFields(commandFields)
                 .WithFooter("View my source code on Github! ♥ https://github.com/flyingfisch/FischBotDiscord-csharp");
 
