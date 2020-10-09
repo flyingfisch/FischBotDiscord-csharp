@@ -1,11 +1,13 @@
 ﻿using System;
 using System.IO;
+using System.Net.Http;
 using System.Threading;
 using System.Threading.Tasks;
 using Discord;
 using Discord.Commands;
 using Discord.WebSocket;
 using FischBot.Services;
+using HtmlAgilityPack;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 
@@ -65,7 +67,10 @@ namespace FischBot
                 .AddSingleton(_configuration)
                 .AddSingleton<DiscordSocketClient>()
                 .AddSingleton<CommandService>()
-                .AddSingleton<CommandHandler>();
+                .AddSingleton<CommandHandler>()
+                .AddSingleton<HttpClient>()
+                .AddSingleton<HtmlWeb>()
+                .AddTransient<UsFlagHalfMastService>();
 
             return services.BuildServiceProvider();
         }
