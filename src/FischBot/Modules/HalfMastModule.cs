@@ -35,7 +35,7 @@ namespace FischBot.Modules
                     .WithFields(embedField)
                     .WithUrl(halfMastInfo.ReadMoreUrl)
                     .WithFooter(text: "From StarsAndStripesDaily.org. Information not guaranteed to be accurate.",
-                                iconUrl: "https://en.wikipedia.org/wiki/Flag_of_the_United_States#/media/File:Flag_of_the_United_States.svg");
+                                iconUrl: "https://raw.githubusercontent.com/flyingfisch/FischBotDiscord-csharp/master/assets/usflag.png");
 
                 await ReplyAsync(embed: embed.Build());
             }
