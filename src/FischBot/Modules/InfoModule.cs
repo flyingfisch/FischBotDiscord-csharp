@@ -28,16 +28,18 @@ namespace Fischbot.Modules
         [Summary("Displays a list of supported commands and their descriptions")]
         public async Task DisplayHelp()
         {
-            var commandPrefix = _configuration.GetSection("FischBot:commandPrefix");
+            var commandPrefix = _configuration.GetSection("FischBot:commandPrefix").Value;
             var commands = _commands.Commands.ToList();
+
             var commandFields = commands
                 .Select(command => new EmbedFieldBuilder()
-                    .WithName(command.Name)
-                    .WithValue($"{commandPrefix}{command.Summary}"));
+                    .WithName($"{commandPrefix}{command.Name}")
+                    .WithValue(command.Summary));
 
             var embed = new EmbedBuilder()
                 .WithTitle("Fischbot Supported Commands")
-                .WithFields(commandFields);
+                .WithFields(commandFields)
+                .WithFooter("View my source code on Github! ♥ https://github.com/flyingfisch/FischBotDiscord-csharp");
 
             await ReplyAsync(embed: embed.Build());
         }
