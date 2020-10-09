@@ -1,0 +1,6 @@
+{
+    "FischBot": {
+        "token": "yourtokengoeshere",
+        "commandPrefix": "^"
+    }
+}
