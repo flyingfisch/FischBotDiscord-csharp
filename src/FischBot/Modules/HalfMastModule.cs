@@ -35,7 +35,7 @@ namespace FischBot.Modules
                     .WithFields(embedField)
                     .WithUrl(halfMastInfo.ReadMoreUrl)
                     .WithFooter(text: "From StarsAndStripesDaily.org. Information not guaranteed to be accurate.",
-                                iconUrl: "https://raw.githubusercontent.com/flyingfisch/FischBotDiscord-csharp/master/assets/usflag.png");
+                                iconUrl: $"https://raw.githubusercontent.com/flyingfisch/FischBotDiscord-csharp/master/assets/us-flag.png");
 
                 await ReplyAsync(embed: embed.Build());
             }
