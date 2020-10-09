@@ -24,6 +24,13 @@ namespace Fischbot.Modules
             await ReplyAsync(echo);
         }
 
+        [Command("good bot")]
+        [Summary("Gives the bot some praise.")]
+        public async Task ReceivePraise()
+        {
+            await ReplyAsync("😊");
+        }
+
         [Command("help")]
         [Summary("Displays a list of supported commands and their descriptions")]
         public async Task DisplayHelp()
