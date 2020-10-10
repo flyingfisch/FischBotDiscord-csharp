@@ -6,6 +6,8 @@ using System.Threading.Tasks;
 using Discord;
 using Discord.Commands;
 using Discord.WebSocket;
+using FischBot.Api;
+using FischBot.Handlers;
 using FischBot.Services;
 using HtmlAgilityPack;
 using Microsoft.Extensions.Configuration;
@@ -24,6 +26,12 @@ namespace FischBot
                 .SetBasePath(Directory.GetCurrentDirectory())
                 .AddJsonFile("appsettings.json", optional: false, reloadOnChange: true)
                 .Build();
+
+            _discordClient = new DiscordSocketClient(new DiscordSocketConfig()
+            {
+                LogLevel = LogSeverity.Info,
+                MessageCacheSize = 50,
+            });
         }
 
 
@@ -34,9 +42,6 @@ namespace FischBot
         {
             using (var services = ConfigureServices())
             {
-                var discordClient = services.GetRequiredService<DiscordSocketClient>();
-                _discordClient = discordClient;
-
                 _discordClient.Log += LogAsync;
                 services.GetRequiredService<CommandService>().Log += LogAsync;
 
@@ -49,28 +54,17 @@ namespace FischBot
             }
         }
 
-        private DiscordSocketClient BuildDiscordSocketClient(IConfiguration configuration)
-        {
-            var config = new DiscordSocketConfig()
-            {
-                LogLevel = LogSeverity.Info,
-                MessageCacheSize = 50,
-            };
-
-            return new DiscordSocketClient(config);
-        }
-
-
         private ServiceProvider ConfigureServices()
         {
             var services = new ServiceCollection()
                 .AddSingleton(_configuration)
-                .AddSingleton<DiscordSocketClient>()
+                .AddSingleton(_discordClient)
                 .AddSingleton<CommandService>()
                 .AddSingleton<CommandHandler>()
                 .AddSingleton<HttpClient>()
                 .AddSingleton<HtmlWeb>()
-                .AddTransient<UsFlagHalfMastService>();
+                .AddSingleton<IDiscordModuleService, DiscordModuleService>()
+                .AddSingleton<IStarsAndStripesDailyClient, StarsAndStripesDailyClient>();
 
             return services.BuildServiceProvider();
         }

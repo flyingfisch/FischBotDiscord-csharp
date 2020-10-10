@@ -7,6 +7,8 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "src", "src", "{9FB992A5-A99
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FischBot", "src\FischBot\FischBot.csproj", "{65227165-B092-41CB-83E5-394773B7507C}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FischBot.UnitTests", "src\FischBot.UnitTests\FischBot.UnitTests.csproj", "{EA6A2A21-554E-4C19-8238-294E07717DD2}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -32,8 +34,21 @@ Global
 		{65227165-B092-41CB-83E5-394773B7507C}.Release|x64.Build.0 = Release|Any CPU
 		{65227165-B092-41CB-83E5-394773B7507C}.Release|x86.ActiveCfg = Release|Any CPU
 		{65227165-B092-41CB-83E5-394773B7507C}.Release|x86.Build.0 = Release|Any CPU
+		{EA6A2A21-554E-4C19-8238-294E07717DD2}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{EA6A2A21-554E-4C19-8238-294E07717DD2}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{EA6A2A21-554E-4C19-8238-294E07717DD2}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{EA6A2A21-554E-4C19-8238-294E07717DD2}.Debug|x64.Build.0 = Debug|Any CPU
+		{EA6A2A21-554E-4C19-8238-294E07717DD2}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{EA6A2A21-554E-4C19-8238-294E07717DD2}.Debug|x86.Build.0 = Debug|Any CPU
+		{EA6A2A21-554E-4C19-8238-294E07717DD2}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{EA6A2A21-554E-4C19-8238-294E07717DD2}.Release|Any CPU.Build.0 = Release|Any CPU
+		{EA6A2A21-554E-4C19-8238-294E07717DD2}.Release|x64.ActiveCfg = Release|Any CPU
+		{EA6A2A21-554E-4C19-8238-294E07717DD2}.Release|x64.Build.0 = Release|Any CPU
+		{EA6A2A21-554E-4C19-8238-294E07717DD2}.Release|x86.ActiveCfg = Release|Any CPU
+		{EA6A2A21-554E-4C19-8238-294E07717DD2}.Release|x86.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(NestedProjects) = preSolution
 		{65227165-B092-41CB-83E5-394773B7507C} = {9FB992A5-A99F-49F4-B5AD-20532E833D5D}
+		{EA6A2A21-554E-4C19-8238-294E07717DD2} = {9FB992A5-A99F-49F4-B5AD-20532E833D5D}
 	EndGlobalSection
 EndGlobal

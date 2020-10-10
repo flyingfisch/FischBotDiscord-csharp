@@ -4,16 +4,17 @@ using System.Reflection;
 using System.Threading.Tasks;
 using Discord;
 using Discord.Commands;
+using FischBot.Services;
 using Microsoft.Extensions.Configuration;
 
-namespace Fischbot.Modules
+namespace FischBot.Modules
 {
-    public class InfoModule : ModuleBase<SocketCommandContext>
+    public class InfoModule : FischBotModuleBase<SocketCommandContext>
     {
         private readonly CommandService _commands;
         private readonly IConfiguration _configuration;
 
-        public InfoModule(CommandService commands, IConfiguration configuration)
+        public InfoModule(IDiscordModuleService moduleService, CommandService commands, IConfiguration configuration) : base(moduleService)
         {
             _commands = commands;
             _configuration = configuration;
@@ -21,21 +22,21 @@ namespace Fischbot.Modules
 
         [Command("say")]
         [Summary("Echoes a message.")]
-        public async Task Say([Remainder][Summary("The text to echo.")] string echo)
+        public async Task SayAsync([Remainder][Summary("The text to echo.")] string echo)
         {
             await ReplyAsync(echo);
         }
 
         [Command("good bot")]
         [Summary("Gives the bot some praise.")]
-        public async Task ReceivePraise()
+        public async Task ReceivePraiseAsync()
         {
             await ReplyAsync("😊");
         }
 
         [Command("help")]
         [Summary("Displays a list of supported commands and their descriptions")]
-        public async Task DisplayHelp()
+        public async Task DisplayHelpAsync()
         {
             var commandPrefix = _configuration.GetSection("FischBot:commandPrefix").Value;
             var commands = _commands.Commands.ToList();
