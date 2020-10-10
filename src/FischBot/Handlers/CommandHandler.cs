@@ -6,6 +6,7 @@ using Discord.Commands;
 using Discord.WebSocket;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Logging;
 
 namespace FischBot.Handlers
 {
@@ -15,12 +16,14 @@ namespace FischBot.Handlers
         private readonly CommandService _commands;
         private readonly DiscordSocketClient _discordClient;
         private readonly IServiceProvider _services;
+        private readonly ILogger _logger;
 
         public CommandHandler(IServiceProvider services)
         {
             _configuration = services.GetRequiredService<IConfiguration>();
             _commands = services.GetRequiredService<CommandService>();
             _discordClient = services.GetRequiredService<DiscordSocketClient>();
+            _logger = services.GetRequiredService<ILogger<CommandHandler>>();
 
             _services = services;
 
@@ -62,14 +65,15 @@ namespace FischBot.Handlers
         {
             if (!command.IsSpecified)
             {
-                Console.WriteLine($"Command failed to execute for [{context.User.Username}] <-> [{result.ErrorReason}]!");
+                _logger.LogWarning($"Command failed to execute for [{context.User.Username}] <-> [{result.ErrorReason}]!");
             }
             else if (result.IsSuccess)
             {
-                Console.WriteLine($"Command [{command.Value.Name}] executed for [{context.User.Username}] on [{context.Guild.Name}]");
+                _logger.LogInformation($"Command [{command.Value.Name}] executed for [{context.User.Username}] on [{context.Guild.Name}]");
             }
             else
             {
+                _logger.LogError($"Command failed to execute for [{context.User.Username}] <-> [{result}]!");
                 await context.Channel.SendMessageAsync($"Sorry, {context.User.Username}... something went wrong -> [{result}]!");
             }
         }
