@@ -19,8 +19,8 @@ namespace FischBot.Modules
 
         [Command("halfmast")]
         [Alias("halfstaff")]
-        [Summary("Displays half mast information about the US flag.")]
-        public async Task DisplayHalfMastInformationAsync([Remainder][Summary("The date to query for.")] DateTime? date = null)
+        [Summary("Displays half mast information about the US flag. When no date is provided, gets information for today.")]
+        public async Task DisplayHalfMastInformationAsync([Remainder][Summary("The date to query for. (optional)")] DateTime? date = null)
         {
             var halfMastDate = date ?? DateTime.Today;
             var halfMastInfo = _starsAndStripesDailyClient.GetUsFlagHalfMastInfo(halfMastDate);

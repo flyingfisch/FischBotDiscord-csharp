@@ -36,23 +36,54 @@ namespace FischBot.Modules
 
         [Command("help")]
         [Alias("commands")]
-        [Summary("Displays a list of supported commands and their descriptions")]
-        public async Task DisplayHelpAsync()
+        [Summary("Displays a list of supported commands and their descriptions. When a command is specified, gets help for that command.")]
+        public async Task DisplayHelpAsync([Remainder][Summary("Name of the command to get help for.")] string commandName = null)
         {
             var commandPrefix = _configuration.GetSection("FischBot:commandPrefix").Value;
-            var commands = _commands.Commands.ToList();
 
-            var commandFields = commands
-                .Select(command => new EmbedFieldBuilder()
-                    .WithName($"{commandPrefix}{command.Name}")
-                    .WithValue(command.Summary));
+            if (commandName is null)
+            {
+                // if commandName is null, display a list of commands and command summaries
 
-            var embed = new EmbedBuilder()
-                .WithTitle("FischBot Supported Commands")
-                .WithFields(commandFields)
-                .WithFooter("View my source code on Github! ♥ https://github.com/flyingfisch/FischBotDiscord-csharp");
+                var commandFields = _commands.Commands
+                    .Select(command => new EmbedFieldBuilder()
+                        .WithName($"{commandPrefix}{command.Name}")
+                        .WithValue($"{command.Summary}"));
 
-            await ReplyAsync(embed: embed.Build());
+                var embed = new EmbedBuilder()
+                    .WithTitle("FischBot Supported Commands")
+                    .WithFields(commandFields)
+                    .WithFooter("View my source code on Github! ♥ https://github.com/flyingfisch/FischBotDiscord-csharp");
+
+                await ReplyAsync(embed: embed.Build());
+            }
+            else
+            {
+                // if commandName is not null, display command usage information
+
+                var command = _commands.Commands.Where(c => c.Aliases.Contains(commandName.Replace(commandPrefix, string.Empty))).FirstOrDefault();
+                // the command name is included in the list of Aliases, so we only need to check there
+
+                if (command is null)
+                {
+                    await ReplyAsync("Command does not exist.");
+                }
+                else
+                {
+                    var commandAliases = command.Aliases.Where(a => a != command.Name);
+                    var parameterNames = command.Parameters.Select(p => $"[{p.Name}]");
+                    var parameterSummaries = command.Parameters.Select(p => $"`{p.Name}`{(p.IsOptional ? " (optional)" : string.Empty)}: {p.Summary}");
+
+                    var embed = new EmbedBuilder()
+                        .WithTitle($"Help: {command.Name}")
+                        .AddField("Summary", command.Summary)
+                        .AddField("Usage", $"`{commandPrefix}{command.Name} {string.Join(' ', parameterNames)}`")
+                        .AddField("Parameters", string.Join('\n', parameterSummaries))
+                        .AddField("Aliases", commandAliases.Any() ? string.Join(", ", commandAliases) : "None");
+
+                    await ReplyAsync(embed: embed.Build());
+                }
+            }
         }
 
         [Command("version")]
