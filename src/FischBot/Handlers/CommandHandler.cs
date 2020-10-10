@@ -7,7 +7,7 @@ using Discord.WebSocket;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 
-namespace FischBot.Services
+namespace FischBot.Handlers
 {
     public class CommandHandler
     {

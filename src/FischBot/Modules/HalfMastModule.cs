@@ -3,26 +3,27 @@ using System.Linq;
 using System.Threading.Tasks;
 using Discord;
 using Discord.Commands;
+using FischBot.Api;
 using FischBot.Services;
 
 namespace FischBot.Modules
 {
-    public class HalfMastModule : ModuleBase<SocketCommandContext>
+    public class HalfMastModule : FischBotModuleBase<SocketCommandContext>
     {
-        private readonly UsFlagHalfMastService _usFlagHalfMastService;
+        private readonly IStarsAndStripesDailyClient _starsAndStripesDailyClient;
 
-        public HalfMastModule(UsFlagHalfMastService usFlagHalfMastService)
+        public HalfMastModule(IDiscordModuleService moduleService, IStarsAndStripesDailyClient starsAndStripesDailyClient) : base(moduleService)
         {
-            _usFlagHalfMastService = usFlagHalfMastService;
+            _starsAndStripesDailyClient = starsAndStripesDailyClient;
         }
 
         [Command("halfmast")]
         [Summary("Displays half mast information about the US flag.")]
-        public async Task DisplayHalfMastInformation([Remainder][Summary("The date to query for.")] DateTime? date = null)
+        public async Task DisplayHalfMastInformationAsync([Remainder][Summary("The date to query for.")] DateTime? date = null)
         {
-            var dateToQuery = date ?? DateTime.Today;
-            var halfMastInfo = _usFlagHalfMastService.GetUsFlagHalfMastInfoAsync(dateToQuery);
-            var embedTitle = CreateHalfMastInfoEmbedTitle(dateToQuery, halfMastInfo.FlagIsHalfMast);
+            var halfMastDate = date ?? DateTime.Today;
+            var halfMastInfo = _starsAndStripesDailyClient.GetUsFlagHalfMastInfo(halfMastDate);
+            var embedTitle = CreateHalfMastInfoEmbedTitle(halfMastDate, halfMastInfo.FlagIsHalfMast);
 
             if (halfMastInfo.FlagIsHalfMast)
             {
