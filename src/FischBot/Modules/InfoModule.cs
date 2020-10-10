@@ -35,6 +35,7 @@ namespace FischBot.Modules
         }
 
         [Command("help")]
+        [Alias("commands")]
         [Summary("Displays a list of supported commands and their descriptions")]
         public async Task DisplayHelpAsync()
         {
