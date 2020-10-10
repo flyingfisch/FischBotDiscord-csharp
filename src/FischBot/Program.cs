@@ -12,6 +12,8 @@ using FischBot.Services;
 using HtmlAgilityPack;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Logging;
+using Serilog;
 
 namespace FischBot
 {
@@ -32,6 +34,10 @@ namespace FischBot
                 LogLevel = LogSeverity.Info,
                 MessageCacheSize = 50,
             });
+
+            Log.Logger = new LoggerConfiguration()
+                .WriteTo.Console()
+                .CreateLogger();
         }
 
 
@@ -42,8 +48,7 @@ namespace FischBot
         {
             using (var services = ConfigureServices())
             {
-                _discordClient.Log += LogAsync;
-                services.GetRequiredService<CommandService>().Log += LogAsync;
+                services.GetRequiredService<LoggingService>();
 
                 await _discordClient.SetGameAsync($"{_configuration.GetSection("FischBot:commandPrefix").Value}help");
                 await _discordClient.LoginAsync(TokenType.Bot, _configuration.GetSection("FischBot:token").Value);
@@ -65,7 +70,9 @@ namespace FischBot
                 .AddSingleton<HttpClient>()
                 .AddSingleton<HtmlWeb>()
                 .AddSingleton<IDiscordModuleService, DiscordModuleService>()
-                .AddSingleton<IStarsAndStripesDailyClient, StarsAndStripesDailyClient>();
+                .AddSingleton<IStarsAndStripesDailyClient, StarsAndStripesDailyClient>()
+                .AddSingleton<LoggingService>()
+                .AddLogging(configure => configure.AddSerilog());
 
             return services.BuildServiceProvider();
         }
