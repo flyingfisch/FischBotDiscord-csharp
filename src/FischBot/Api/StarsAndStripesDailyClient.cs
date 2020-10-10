@@ -36,7 +36,7 @@ namespace FischBot.Api
                 Title = title,
                 Description = description,
                 FlagIsHalfMast = flagIsHalfMast,
-                ReadMoreUrl = url
+                ArticleUrl = url
             };
         }
 

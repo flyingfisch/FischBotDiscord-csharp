@@ -18,6 +18,7 @@ namespace FischBot.Modules
         }
 
         [Command("halfmast")]
+        [Alias("halfstaff")]
         [Summary("Displays half mast information about the US flag.")]
         public async Task DisplayHalfMastInformationAsync([Remainder][Summary("The date to query for.")] DateTime? date = null)
         {
@@ -33,8 +34,8 @@ namespace FischBot.Modules
             {
                 var embedField = new EmbedFieldBuilder()
                     .WithName(halfMastInfo.Title)
-                    .WithValue($"{halfMastInfo.Description.Substring(0, 500)}...");
-                
+                    .WithValue($"{halfMastInfo.Description.Substring(0, 500)}...\n[Full Article]({halfMastInfo.ArticleUrl})");
+
                 embedBuilder.AddField(embedField);
             }
 
