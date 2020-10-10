@@ -45,6 +45,7 @@ namespace FischBot
                 _discordClient.Log += LogAsync;
                 services.GetRequiredService<CommandService>().Log += LogAsync;
 
+                await _discordClient.SetGameAsync($"{_configuration.GetSection("FischBot:commandPrefix").Value}help");
                 await _discordClient.LoginAsync(TokenType.Bot, _configuration.GetSection("FischBot:token").Value);
                 await _discordClient.StartAsync();
 
