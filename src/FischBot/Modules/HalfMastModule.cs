@@ -24,55 +24,31 @@ namespace FischBot.Modules
             var halfMastDate = date ?? DateTime.Today;
             var halfMastInfo = _starsAndStripesDailyClient.GetUsFlagHalfMastInfo(halfMastDate);
             var embedTitle = CreateHalfMastInfoEmbedTitle(halfMastDate, halfMastInfo.FlagIsHalfMast);
+            var embedBuilder = new EmbedBuilder()
+                .WithTitle(embedTitle)
+                .WithFooter("From StarsAndStripesDaily.org. Information not guaranteed to be accurate.",
+                    $"https://raw.githubusercontent.com/flyingfisch/FischBotDiscord-csharp/master/assets/us-flag.png");
 
             if (halfMastInfo.FlagIsHalfMast)
             {
                 var embedField = new EmbedFieldBuilder()
                     .WithName(halfMastInfo.Title)
                     .WithValue($"{halfMastInfo.Description.Substring(0, 500)}...");
-
-                var embed = new EmbedBuilder()
-                    .WithTitle(embedTitle)
-                    .WithFields(embedField)
-                    .WithUrl(halfMastInfo.ReadMoreUrl)
-                    .WithFooter(text: "From StarsAndStripesDaily.org. Information not guaranteed to be accurate.",
-                                iconUrl: $"https://raw.githubusercontent.com/flyingfisch/FischBotDiscord-csharp/master/assets/us-flag.png");
-
-                await ReplyAsync(embed: embed.Build());
+                
+                embedBuilder.AddField(embedField);
             }
-            else
-            {
-                var embed = new EmbedBuilder()
-                    .WithTitle(embedTitle);
 
-                await ReplyAsync(embed: embed.Build());
-            }
+            await ReplyAsync(embed: embedBuilder.Build());
         }
 
         private string CreateHalfMastInfoEmbedTitle(DateTime date, bool flagIsHalfMast)
         {
             if (date == DateTime.Today)
             {
-                if (flagIsHalfMast)
-                {
-                    return "The flag is at half mast today.";
-                }
-                else
-                {
-                    return "The flag is not at half mast today.";
-                }
+                return flagIsHalfMast ? "The flag is at half mast today." : "The flag is not at half mast today.";
             }
-            else
-            {
-                if (flagIsHalfMast)
-                {
-                    return $"The flag was at half mast on {date.ToString("D")}.";
-                }
-                else
-                {
-                    return $"The flag was not at half mast on {date.ToString("D")}.";
-                }
-            }
+
+            return flagIsHalfMast ? $"The flag was at half mast on {date:D}." : $"The flag was not at half mast on {date:D}.";
         }
     }
 }
