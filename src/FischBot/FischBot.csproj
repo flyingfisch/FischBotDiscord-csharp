@@ -3,8 +3,8 @@
   <PropertyGroup>
     <OutputType>Exe</OutputType>
     <TargetFramework>netcoreapp3.1</TargetFramework>
-    <AssemblyVersion>0.1.2</AssemblyVersion>
-    <Version>0.1-albacore-rev2</Version>
+    <AssemblyVersion>0.1.3</AssemblyVersion>
+    <Version>0.1-albacore-rev3-rc1</Version>
     <Deterministic>false</Deterministic>
   </PropertyGroup>
 
