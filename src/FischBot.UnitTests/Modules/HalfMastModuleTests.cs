@@ -1,6 +1,6 @@
 using System;
 using System.Threading.Tasks;
-using FischBot.Api;
+using FischBot.Api.StarsAndStripesDailyClient;
 using FischBot.Models;
 using FischBot.Modules;
 using FischBot.Services;

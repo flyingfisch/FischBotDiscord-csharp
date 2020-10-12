@@ -47,7 +47,7 @@ namespace FischBot.Modules
 
                 var commandFields = _commands.Commands
                     .Select(command => new EmbedFieldBuilder()
-                        .WithName($"{commandPrefix}{command.Name}")
+                        .WithName($"{commandPrefix}{(command.Module.Group != null ? $"{command.Module.Group} " : "")}{command.Name}")
                         .WithValue($"{command.Summary}"));
 
                 var embed = new EmbedBuilder()
@@ -70,7 +70,7 @@ namespace FischBot.Modules
                 }
                 else
                 {
-                    var commandAliases = command.Aliases.Where(a => a != command.Name);
+                    var commandAliases = command.Aliases.Where(a => a != $"{(command.Module.Group != null ? $"{command.Module.Group} " : "")}{command.Name}");
                     var parameterNames = command.Parameters.Select(p => $"[{p.Name}]");
                     var parameterSummaries = command.Parameters.Select(p => $"`{p.Name}`{(p.IsOptional ? " (optional)" : string.Empty)}: {p.Summary}");
 
