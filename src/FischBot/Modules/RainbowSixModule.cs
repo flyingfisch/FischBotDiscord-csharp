@@ -10,7 +10,7 @@ namespace FischBot.Modules
     [Group("siege")]
     public class RainbowSixModule : FischBotModuleBase<SocketCommandContext>
     {
-        private IRainbowSixService _rainbowSixService;
+        private readonly IRainbowSixService _rainbowSixService;
 
         public RainbowSixModule(IDiscordModuleService moduleService, IRainbowSixService rainbowSixService) : base(moduleService)
         {
