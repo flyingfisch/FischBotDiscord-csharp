@@ -4,7 +4,7 @@ using FischBot.Models;
 using HtmlAgilityPack;
 using ScrapySharp.Extensions;
 
-namespace FischBot.Api
+namespace FischBot.Api.StarsAndStripesDailyClient
 {
     public class StarsAndStripesDailyClient : IStarsAndStripesDailyClient
     {

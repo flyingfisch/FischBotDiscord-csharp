@@ -6,13 +6,13 @@ using System.Threading.Tasks;
 using Discord;
 using Discord.Commands;
 using Discord.WebSocket;
-using FischBot.Api;
+using FischBot.Api.StarsAndStripesDailyClient;
+using FischBot.Api.StatsDbClient;
 using FischBot.Handlers;
 using FischBot.Services;
 using HtmlAgilityPack;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.Logging;
 using Serilog;
 
 namespace FischBot
@@ -71,6 +71,8 @@ namespace FischBot
                 .AddSingleton<HtmlWeb>()
                 .AddSingleton<IDiscordModuleService, DiscordModuleService>()
                 .AddSingleton<IStarsAndStripesDailyClient, StarsAndStripesDailyClient>()
+                .AddSingleton<IStatsDbClient, StatsDbClient>()
+                .AddSingleton<IRainbowSixService, RainbowSixService>()
                 .AddSingleton<LoggingService>()
                 .AddLogging(configure => configure.AddSerilog());
 
