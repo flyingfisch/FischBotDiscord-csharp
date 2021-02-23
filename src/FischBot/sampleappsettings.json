@@ -1,6 +1,7 @@
 {
     "FischBot": {
         "token": "yourtokengoeshere",
-        "commandPrefix": "^"
+        "commandPrefix": "^",
+        "holidaysApiKey": "calendarific holidays api key"
     }
 }

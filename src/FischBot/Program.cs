@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 using Discord;
 using Discord.Commands;
 using Discord.WebSocket;
+using FischBot.Api.CalendarificHolidaysApiClient;
 using FischBot.Api.StarsAndStripesDailyClient;
 using FischBot.Api.StatsDbClient;
 using FischBot.Handlers;
@@ -72,7 +73,9 @@ namespace FischBot
                 .AddSingleton<IDiscordModuleService, DiscordModuleService>()
                 .AddSingleton<IStarsAndStripesDailyClient, StarsAndStripesDailyClient>()
                 .AddSingleton<IStatsDbClient, StatsDbClient>()
+                .AddSingleton<ICalendarificHolidaysApiClient, CalendarificHolidaysApiClient>()
                 .AddSingleton<IRainbowSixService, RainbowSixService>()
+                .AddSingleton<IHolidayService, HolidayService>()
                 .AddSingleton<LoggingService>()
                 .AddLogging(configure => configure.AddSerilog());
 
