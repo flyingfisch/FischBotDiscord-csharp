@@ -39,7 +39,9 @@ namespace FischBot.UnitTests.Modules
                                                                             It.Is<string>(m => m == echoMessage),
                                                                             It.IsAny<bool>(),
                                                                             It.IsAny<Embed>(),
-                                                                            It.IsAny<RequestOptions>()), Times.Once);
+                                                                            It.IsAny<RequestOptions>(),
+                                                                            It.IsAny<AllowedMentions>(),
+                                                                            It.IsAny<MessageReference>()), Times.Once);
         }
 
         [TestMethod]
@@ -57,7 +59,9 @@ namespace FischBot.UnitTests.Modules
                                                                             It.Is<string>(m => m == blushEmoji),
                                                                             It.IsAny<bool>(),
                                                                             It.IsAny<Embed>(),
-                                                                            It.IsAny<RequestOptions>()), Times.Once);
+                                                                            It.IsAny<RequestOptions>(),
+                                                                            It.IsAny<AllowedMentions>(),
+                                                                            It.IsAny<MessageReference>()), Times.Once);
         }
 
         private InfoModule BuildInfoModule()
