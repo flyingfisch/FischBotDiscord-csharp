@@ -6,6 +6,13 @@ namespace FischBot.Services
 {
     public interface IDiscordModuleService
     {
-        Task<IUserMessage> ReplyAsync(ICommandContext context, string text = null, bool isTTS = false, Embed embed = null, RequestOptions options = null);
+        Task<IUserMessage> ReplyAsync(
+            ICommandContext context,
+            string text = null,
+            bool isTTS = false,
+            Embed embed = null,
+            RequestOptions options = null,
+            AllowedMentions allowedMentions = null,
+            MessageReference messageReference = null);
     }
 }
