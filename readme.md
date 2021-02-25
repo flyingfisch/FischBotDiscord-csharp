@@ -1,5 +1,7 @@
 # FischBotDiscord-csharp
 
+[![.NET](https://github.com/flyingfisch/FischBotDiscord-csharp/actions/workflows/dotnet.yml/badge.svg)](https://github.com/flyingfisch/FischBotDiscord-csharp/actions/workflows/dotnet.yml)
+
 <img src="assets/FischBotIcon.png" width="250px" alt="FischBot Icon">
 
 A Discord bot using Discord.NET.
