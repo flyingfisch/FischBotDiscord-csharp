@@ -2,6 +2,7 @@
     "FischBot": {
         "token": "yourtokengoeshere",
         "commandPrefix": "^",
-        "holidaysApiKey": "calendarific holidays api key"
+        "holidaysApiKey": "calendarific holidays api key",
+        "alphaVantageApiKey": "alpha vantage stocks api key"
     }
 }
