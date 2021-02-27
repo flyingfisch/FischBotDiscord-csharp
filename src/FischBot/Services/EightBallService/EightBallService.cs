@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using FischBot.Helpers;
 
 namespace FischBot.Services.EightBallService
