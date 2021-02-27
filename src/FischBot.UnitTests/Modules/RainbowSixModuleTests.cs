@@ -1,7 +1,8 @@
 using System.Threading.Tasks;
 using FischBot.Models;
 using FischBot.Modules;
-using FischBot.Services;
+using FischBot.Services.DiscordModuleService;
+using FischBot.Services.RainbowSixService;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Moq;
 

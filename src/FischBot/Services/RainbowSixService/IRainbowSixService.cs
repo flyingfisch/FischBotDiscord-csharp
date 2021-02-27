@@ -1,7 +1,7 @@
 using System.Threading.Tasks;
 using FischBot.Models;
 
-namespace FischBot.Services
+namespace FischBot.Services.RainbowSixService
 {
     public interface IRainbowSixService
     {

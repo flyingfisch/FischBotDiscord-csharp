@@ -3,7 +3,7 @@ using System.Threading.Tasks;
 using FischBot.Api.StatsDbClient;
 using FischBot.Models;
 
-namespace FischBot.Services
+namespace FischBot.Services.RainbowSixService
 {
     public class RainbowSixService : IRainbowSixService
     {

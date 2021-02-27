@@ -3,7 +3,8 @@ using System.Threading.Tasks;
 using Discord;
 using Discord.Commands;
 using FischBot.Models;
-using FischBot.Services;
+using FischBot.Services.DiscordModuleService;
+using FischBot.Services.RainbowSixService;
 
 namespace FischBot.Modules
 {

@@ -3,7 +3,7 @@ using System.Threading.Tasks;
 using FischBot.Api.StarsAndStripesDailyClient;
 using FischBot.Models;
 using FischBot.Modules;
-using FischBot.Services;
+using FischBot.Services.DiscordModuleService;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Moq;
 

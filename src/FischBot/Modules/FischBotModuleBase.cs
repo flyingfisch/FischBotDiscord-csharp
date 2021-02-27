@@ -1,7 +1,7 @@
 using System.Threading.Tasks;
 using Discord;
 using Discord.Commands;
-using FischBot.Services;
+using FischBot.Services.DiscordModuleService;
 
 namespace FischBot.Modules
 {

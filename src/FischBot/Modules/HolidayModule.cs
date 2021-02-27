@@ -2,7 +2,8 @@ using System;
 using System.Threading.Tasks;
 using Discord;
 using Discord.Commands;
-using FischBot.Services;
+using FischBot.Services.DiscordModuleService;
+using FischBot.Services.HolidayService;
 
 namespace FischBot.Modules
 {
