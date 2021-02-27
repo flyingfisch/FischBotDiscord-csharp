@@ -3,8 +3,8 @@
   <PropertyGroup>
     <OutputType>Exe</OutputType>
     <TargetFramework>netcoreapp3.1</TargetFramework>
-    <AssemblyVersion>0.3.0</AssemblyVersion>
-    <Version>0.3-combfish</Version>
+    <AssemblyVersion>0.3.1</AssemblyVersion>
+    <Version>0.3-combfish-rev1</Version>
     <Deterministic>false</Deterministic>
   </PropertyGroup>
 
