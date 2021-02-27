@@ -2,7 +2,7 @@ using System.Threading.Tasks;
 using Discord;
 using Discord.Commands;
 
-namespace FischBot.Services
+namespace FischBot.Services.DiscordModuleService
 {
     public class DiscordModuleService : IDiscordModuleService
     {

@@ -5,7 +5,7 @@ using System.Threading.Tasks;
 using FischBot.Api.CalendarificHolidaysApiClient;
 using FischBot.Models;
 
-namespace FischBot.Services
+namespace FischBot.Services.HolidayService
 {
     public class HolidayService : IHolidayService
     {

@@ -1,11 +1,12 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Discord;
 using Discord.Commands;
 using FischBot.Helpers;
-using FischBot.Services;
+using FischBot.Services.DiscordModuleService;
 
 namespace FischBot.Modules
 {
@@ -49,7 +50,7 @@ namespace FischBot.Modules
         /// <returns></returns>
         [Command("8ball")]
         [Summary("Asks the Magic 8-Ball for the answer that you seek.")]
-        public async Task QuestionThe8Ball([Remainder] [Summary("The question for which you seek an answer.")] string question)
+        public async Task QuestionThe8Ball([Remainder][Summary("The question for which you seek an answer.")] string question)
         {
             // Jumble our possible results.
             var stringBuilder = new StringBuilder();
@@ -64,10 +65,10 @@ namespace FischBot.Modules
             };
 
             // Scramble our list of possible results
-            ShuffleTheList();
+            var shuffledList = ShuffleTheList();
 
             // Get an answer
-            var (phrase, level) = _eightBallResults[Random.Next(0, _eightBallResults.Count)];
+            var (phrase, level) = shuffledList[Random.Next(0, shuffledList.Count)];
 
             await Task.Run(async () =>
             {
@@ -98,13 +99,17 @@ namespace FischBot.Modules
         }
 
         // Loop through a random amount of times to scramble our list of possible response for the Magic 8ball game.
-        private void ShuffleTheList()
+        private List<(string phrase, int level)> ShuffleTheList()
         {
             var timesToJumble = Random.Next(2, 10);
+            var randomizedList = _eightBallResults;
+
             for (var i = 0; i < timesToJumble; i++)
             {
-                _eightBallResults.Shuffle();
+                randomizedList = randomizedList.Shuffle().ToList();
             }
+
+            return randomizedList;
         }
     }
 }

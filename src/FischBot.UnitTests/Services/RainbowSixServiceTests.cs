@@ -3,7 +3,7 @@ using System.Threading.Tasks;
 using FischBot.Api.StatsDbClient;
 using FischBot.Api.StatsDbClient.Dtos;
 using FischBot.Api.StatsDbClient.Dtos.RainbowSix;
-using FischBot.Services;
+using FischBot.Services.RainbowSixService;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Moq;
 

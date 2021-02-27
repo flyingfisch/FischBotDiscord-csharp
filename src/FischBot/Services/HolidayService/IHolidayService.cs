@@ -2,7 +2,7 @@ using System;
 using System.Threading.Tasks;
 using FischBot.Models;
 
-namespace FischBot.Services
+namespace FischBot.Services.HolidayService
 {
     public interface IHolidayService
     {

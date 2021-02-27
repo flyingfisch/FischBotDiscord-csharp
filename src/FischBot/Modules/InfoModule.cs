@@ -4,7 +4,7 @@ using System.Reflection;
 using System.Threading.Tasks;
 using Discord;
 using Discord.Commands;
-using FischBot.Services;
+using FischBot.Services.DiscordModuleService;
 using Microsoft.Extensions.Configuration;
 
 namespace FischBot.Modules
