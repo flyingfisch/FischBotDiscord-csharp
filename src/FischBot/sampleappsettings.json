@@ -3,6 +3,6 @@
         "token": "yourtokengoeshere",
         "commandPrefix": "^",
         "holidaysApiKey": "calendarific holidays api key",
-        "alphaVantageApiKey": "alpha vantage stocks api key"
+        "twelveDataApiKey": "twelvedata stocks api key"
     }
 }

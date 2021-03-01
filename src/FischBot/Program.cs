@@ -11,8 +11,8 @@ using FischBot.Api.StarsAndStripesDailyClient;
 using FischBot.Api.StatsDbClient;
 using FischBot.Handlers;
 using FischBot.Services;
-using FischBot.Services.AlphaVantageService;
 using FischBot.Services.DiscordModuleService;
+using FischBot.Services.FinanceService;
 using FischBot.Services.HolidayService;
 using FischBot.Services.RainbowSixService;
 using HtmlAgilityPack;
@@ -80,7 +80,7 @@ namespace FischBot
                 .AddSingleton<ICalendarificHolidaysApiClient, CalendarificHolidaysApiClient>()
                 .AddSingleton<IRainbowSixService, RainbowSixService>()
                 .AddSingleton<IHolidayService, HolidayService>()
-                .AddSingleton<IAlphaVantageService, AlphaVantageService>()
+                .AddSingleton<IFinanceService, FinanceService>()
                 .AddSingleton<LoggingService>()
                 .AddLogging(configure => configure.AddSerilog());
 
