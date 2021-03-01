@@ -8,5 +8,6 @@ namespace FischBot.Services.FinanceService
         Task<decimal> GetRealTimeStockPrice(string symbol);
         Task<TimeSeries> GetTimeSeries(string symbol, string interval);
         Task<TwelveDataUsageStats> GetApiUsageStats();
+        Task<Quote> GetQuote(string symbol, string interval);
     }
 }

@@ -1,3 +1,4 @@
+using System;
 using System.Linq;
 using System.Net.Http;
 using System.Threading.Tasks;
@@ -54,6 +55,33 @@ namespace FischBot.Services.FinanceService
                 .ToArray();
 
             return timeSeries;
+        }
+
+        public async Task<Quote> GetQuote(string symbol, string interval)
+        {
+            var response = await _twelveDataClient.GetQuoteAsync(symbol, interval);
+
+            if (response.Name == null)
+            {
+                throw new Exception("Unable to get quote.");
+            }
+
+            var quote = new Quote()
+            {
+                PercentChange = (decimal)response.PercentChange,
+                Change = (decimal)response.Change,
+                PreviousClose = (decimal)response.PreviousClose,
+                Volume = response.Volume,
+                Low = (decimal)response.Low,
+                High = (decimal)response.High,
+                Open = (decimal)response.Open,
+                Close = (decimal)response.Close,
+                Datetime = response.Datetime,
+                Name = response.Name,
+                Symbol = symbol.ToUpper()
+            };
+
+            return quote;
         }
 
         public async Task<TwelveDataUsageStats> GetApiUsageStats()

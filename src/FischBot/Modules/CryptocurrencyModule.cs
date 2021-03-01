@@ -25,24 +25,23 @@ namespace FischBot.Modules
             try
             {
                 var requestSymbol = $"{symbol}/USD";
-
                 var price = await _financeService.GetRealTimeStockPrice(requestSymbol);
-
-                var timeSeries = await _financeService.GetTimeSeries(requestSymbol, "1day");
-                var latestTimeSeriesInfo = timeSeries.Values.First();
-
+                var quote = await _financeService.GetQuote(requestSymbol, "1day");
                 var usageStats = await _financeService.GetApiUsageStats();
 
                 var embed = new EmbedBuilder()
-                    .WithTitle($"Price information for {symbol.ToUpper()}")
-                    .WithColor(price > latestTimeSeriesInfo.Open ? Color.Green : Color.Red)
+                    .WithTitle(quote.Name)
+                    .WithColor(quote.Change > 0 ? Color.Green : Color.Red)
 
-                    .AddField("Price", price)
+                    .AddField(
+                        "Price",
+                        $"{price.ToString("C")} {(quote.Change > 0 ? "▲" : "▼")}{quote.Change.ToString("C")} ({quote.PercentChange.ToString("F2")}%)"
+                    )
 
-                    .AddField("Trading info for last trading day", latestTimeSeriesInfo.Datetime)
+                    .AddField("Trading info for last trading day", quote.Datetime.ToString("d"))
 
-                    .AddField("Open/Close", $"{latestTimeSeriesInfo.Open.ToString("C")}/{latestTimeSeriesInfo.Close.ToString("C")}")
-                    .AddField("High/Low", $"{latestTimeSeriesInfo.High.ToString("C")}/{latestTimeSeriesInfo.Low.ToString("C")}")
+                    .AddField("Open/Close", $"{quote.Open.ToString("C")}/{quote.Close.ToString("C")}")
+                    .AddField("High/Low", $"{quote.High.ToString("C")}/{quote.Low.ToString("C")}")
 
                     .WithFooter($"Source: twelvedata | Daily usage: {usageStats.daily_usage}/{usageStats.plan_daily_limit}")
                     .Build();
