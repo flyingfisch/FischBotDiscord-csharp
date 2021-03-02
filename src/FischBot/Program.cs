@@ -14,6 +14,7 @@ using FischBot.Services;
 using FischBot.Services.DiscordModuleService;
 using FischBot.Services.FinanceService;
 using FischBot.Services.HolidayService;
+using FischBot.Services.ImageChartService;
 using FischBot.Services.RainbowSixService;
 using HtmlAgilityPack;
 using Microsoft.Extensions.Configuration;
@@ -81,6 +82,7 @@ namespace FischBot
                 .AddSingleton<IRainbowSixService, RainbowSixService>()
                 .AddSingleton<IHolidayService, HolidayService>()
                 .AddSingleton<IFinanceService, FinanceService>()
+                .AddSingleton<IImageChartService, ImageChartService>()
                 .AddSingleton<LoggingService>()
                 .AddLogging(configure => configure.AddSerilog());
 
