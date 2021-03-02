@@ -5,6 +5,9 @@ using Discord;
 using System;
 using FischBot.Services.FinanceService;
 using System.Linq;
+using FischBot.Services.ImageChartService;
+using System.IO;
+using FischBot.Models.Finance;
 
 namespace FischBot.Modules
 {
@@ -12,10 +15,12 @@ namespace FischBot.Modules
     public class StocksModule : FischBotModuleBase<SocketCommandContext>
     {
         private readonly IFinanceService _financeService;
+        private readonly IImageChartService _imageChartService;
 
-        public StocksModule(IDiscordModuleService moduleService, IFinanceService financeService) : base(moduleService)
+        public StocksModule(IDiscordModuleService moduleService, IFinanceService financeService, IImageChartService imageChartService) : base(moduleService)
         {
             _financeService = financeService;
+            _imageChartService = imageChartService;
         }
 
         [Command("price")]
@@ -53,6 +58,63 @@ namespace FischBot.Modules
             {
                 await ReplyAsync("Unable to get information for that stock.");
             }
+        }
+
+        [Command("chart")]
+        [Summary("Displays a chart for the specified stock.")]
+        public async Task DisplayStockChart([Summary("Stock symbol")] string symbol, [Summary("Time period to display for")] string period = "week")
+        {
+            var dataset = await GetDataSet(symbol, period);
+            var lineColor = dataset.First() < dataset.Last() ? "2ECC71" : "E74C3C";
+
+            var chartImage = _imageChartService.CreateLineChart(
+                dataset,
+                lineColor,
+                500,
+                100);
+
+            await Context.Channel.SendFileAsync(chartImage, "chart.png");
+        }
+
+        private async Task<decimal[]> GetDataSet(string symbol, string period)
+        {
+            if (period == "week")
+            {
+                var timeSeries = await _financeService.GetTimeSeries(symbol, "2h");
+
+                return timeSeries.Values
+                    .Where(value => value.Datetime > DateTime.Now.AddDays(-7))
+                    .OrderBy(value => value.Datetime)
+                    .Select(value => value.Open)
+                    .Take(7)
+                    .ToArray();
+            }
+
+            if (period == "month")
+            {
+                var timeSeries = await _financeService.GetTimeSeries(symbol, "1day");
+
+                return timeSeries.Values
+                    .Where(value => value.Datetime > DateTime.Now.AddMonths(-1))
+                    .OrderBy(value => value.Datetime)
+                    .Select(value => value.Open)
+                    .Take(7)
+                    .ToArray();
+            }
+
+            if (period == "year")
+            {
+                var timeSeries = await _financeService.GetTimeSeries(symbol, "1month");
+
+                return timeSeries.Values
+                    .Where(value => value.Datetime > DateTime.Now.AddYears(-1))
+                    .OrderBy(value => value.Datetime)
+                    .Select(value => value.Open)
+                    .Take(7)
+                    .ToArray();
+            }
+
+            throw new NotImplementedException();
         }
     }
 }

@@ -46,6 +46,7 @@ namespace FischBot.Services.FinanceService
             timeSeries.Values = response.Values
                 .Select(value => new TimeSeriesValue()
                 {
+                    Datetime = value.Datetime,
                     Open = (decimal)value.Open,
                     Close = (decimal)value.Close,
                     High = (decimal)value.High,
