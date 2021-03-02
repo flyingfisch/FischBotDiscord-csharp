@@ -6,6 +6,6 @@ namespace FischBot.Api.NasaApiClient
 {
     public interface INasaApiClient
     {
-        Task<ApodResponse> GetAstronomyPictureOfTheDay(DateTime date);
+        Task<ApodResponse> GetAstronomyPictureOfTheDay(DateTime? date);
     }
 }

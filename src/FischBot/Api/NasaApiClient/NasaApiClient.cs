@@ -18,9 +18,10 @@ namespace FischBot.Api.NasaApiClient
             _nasaApiKey = configuration.GetSection("FischBot:nasaApiKey").Value;
         }
 
-        public async Task<ApodResponse> GetAstronomyPictureOfTheDay(DateTime date)
+        public async Task<ApodResponse> GetAstronomyPictureOfTheDay(DateTime? date)
         {
-            var response = await _httpClient.GetAsync($"{_nasaApiBaseUrl}planetary/apod?api_key={_nasaApiKey}&date={date.ToString("yyyy-MM-dd")}");
+            var dateQueryParameter = date != null ? $"date={date?.ToString("yyyy-MM-dd")}" : string.Empty;
+            var response = await _httpClient.GetAsync($"{_nasaApiBaseUrl}planetary/apod?api_key={_nasaApiKey}&{dateQueryParameter}");
 
             response.EnsureSuccessStatusCode();
 

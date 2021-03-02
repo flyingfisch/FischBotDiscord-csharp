@@ -14,7 +14,7 @@ namespace FischBot.Services.AstronomyService
             _nasaApiClient = nasaApiClient;
         }
 
-        public async Task<PictureOfTheDay> GetPictureOfTheDay(DateTime date)
+        public async Task<PictureOfTheDay> GetPictureOfTheDay(DateTime? date)
         {
             var response = await _nasaApiClient.GetAstronomyPictureOfTheDay(date);
 

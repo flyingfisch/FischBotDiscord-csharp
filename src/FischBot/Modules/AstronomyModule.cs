@@ -21,7 +21,7 @@ namespace FischBot.Modules
         [Summary("Displays the NASA astronomy picture of the day.")]
         public async Task DisplayApod([Summary("Date to query for.")] DateTime? date = null)
         {
-            var apod = await _astronomyService.GetPictureOfTheDay(date ?? DateTime.Now);
+            var apod = await _astronomyService.GetPictureOfTheDay(date);
 
             var embed = new EmbedBuilder()
                 .WithTitle($"{apod.Date.ToString("d")}: {apod.Name}")

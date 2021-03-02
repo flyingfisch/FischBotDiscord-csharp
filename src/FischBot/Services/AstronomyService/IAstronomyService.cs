@@ -6,6 +6,6 @@ namespace FischBot.Services.AstronomyService
 {
     public interface IAstronomyService
     {
-        Task<PictureOfTheDay> GetPictureOfTheDay(DateTime date);
+        Task<PictureOfTheDay> GetPictureOfTheDay(DateTime? date);
     }
 }
