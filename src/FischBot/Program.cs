@@ -7,10 +7,12 @@ using Discord;
 using Discord.Commands;
 using Discord.WebSocket;
 using FischBot.Api.CalendarificHolidaysApiClient;
+using FischBot.Api.NasaApiClient;
 using FischBot.Api.StarsAndStripesDailyClient;
 using FischBot.Api.StatsDbClient;
 using FischBot.Handlers;
 using FischBot.Services;
+using FischBot.Services.AstronomyService;
 using FischBot.Services.DiscordModuleService;
 using FischBot.Services.FinanceService;
 using FischBot.Services.HolidayService;
@@ -83,6 +85,8 @@ namespace FischBot
                 .AddSingleton<IHolidayService, HolidayService>()
                 .AddSingleton<IFinanceService, FinanceService>()
                 .AddSingleton<IImageChartService, ImageChartService>()
+                .AddSingleton<INasaApiClient, NasaApiClient>()
+                .AddSingleton<IAstronomyService, AstronomyService>()
                 .AddSingleton<LoggingService>()
                 .AddLogging(configure => configure.AddSerilog());
 
