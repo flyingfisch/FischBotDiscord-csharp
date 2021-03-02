@@ -15,6 +15,7 @@ namespace FischBot.Modules
             "👀", "🍿", "🍔", "📞", "📀", "📸", "💹", "💰", "✏", "📊",
             "🔓", "🔫", "📡", "🔭", "💉", "⚰", "☢", "⚜", "🎉", "🥳",
             "🎊", "🤩", "☄", "🎂", "🥮", "🍪", "⚡", "⚔", "☘", "☠",
+            "🤭", "🤠", "🥺", "😈", "☝", "✊", "🦊", "🐠"
         };
 
         public FunModule(IDiscordModuleService moduleService) : base(moduleService)
@@ -25,7 +26,7 @@ namespace FischBot.Modules
         [Summary("Throws an emoji party!")]
         public async Task ThrowEmojiParty()
         {
-            var emojisToPartyWith = _emojiPartyEmojis.Shuffle().Take(20);
+            var emojisToPartyWith = _emojiPartyEmojis.Distinct().Shuffle().Take(20);
 
             foreach (var emoji in emojisToPartyWith)
             {
