@@ -9,7 +9,7 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="Discord.NET" Version="2.3.0" />
+    <PackageReference Include="Discord.NET" Version="2.4.0" />
     <PackageReference Include="HtmlAgilityPack" Version="1.11.24" />
     <PackageReference Include="ImageCharts" Version="5.6.26" />
     <PackageReference Include="Microsoft.AspNet.WebApi.Client" Version="5.2.7" />
