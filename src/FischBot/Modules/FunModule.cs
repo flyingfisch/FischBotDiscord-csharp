@@ -22,8 +22,8 @@ namespace FischBot.Modules
         {
         }
 
-        [Command("emojiparty1")]
-        [Summary("Throws an emoji party 1!")]
+        [Command("emojiparty")]
+        [Summary("Throws an emoji party!")]
         public async Task ThrowEmojiParty()
         {
             var emojisToPartyWith = _emojiPartyEmojis.Distinct().Shuffle().Take(20);
