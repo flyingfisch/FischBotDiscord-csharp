@@ -2,9 +2,9 @@
 
   <PropertyGroup>
     <OutputType>Exe</OutputType>
-    <TargetFramework>netcoreapp3.1</TargetFramework>
-    <AssemblyVersion>0.3.4</AssemblyVersion>
-    <Version>0.3-combfish-rev4</Version>
+    <TargetFramework>net5.0</TargetFramework>
+    <AssemblyVersion>0.3.5</AssemblyVersion>
+    <Version>0.3-combfish-rev5</Version>
     <Deterministic>false</Deterministic>
   </PropertyGroup>
 
