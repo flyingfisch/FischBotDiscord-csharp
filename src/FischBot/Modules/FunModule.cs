@@ -38,7 +38,7 @@ namespace FischBot.Modules
         [Summary("Announces that the lamp has spoken, thus ending arguments.")]
         public async Task TheLampHasSpoken()
         {
-            await ReplyAsync("https://cdn.discordapp.com/attachments/347573265515937808/895307577087361104/unknown.png");
+            await ReplyAsync("https://raw.githubusercontent.com/flyingfisch/FischBotDiscord-csharp/master/assets/the-lamp-has-spoken.png");
         }
     }
 }
