@@ -33,5 +33,12 @@ namespace FischBot.Modules
                 await Context.Message.AddReactionAsync(new Emoji(emoji));
             }
         }
+
+        [Command("lamp")]
+        [Summary("Announces that the lamp has spoken, thus ending arguments.")]
+        public async Task TheLampHasSpoken()
+        {
+            await ReplyAsync("https://raw.githubusercontent.com/flyingfisch/FischBotDiscord-csharp/master/assets/the-lamp-has-spoken.png");
+        }
     }
 }
