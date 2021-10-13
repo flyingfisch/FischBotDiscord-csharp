@@ -22,8 +22,8 @@ namespace FischBot.Modules
         {
         }
 
-        [Command("emojiparty")]
-        [Summary("Throws an emoji party!")]
+        [Command("emojiparty1")]
+        [Summary("Throws an emoji party 1!")]
         public async Task ThrowEmojiParty()
         {
             var emojisToPartyWith = _emojiPartyEmojis.Distinct().Shuffle().Take(20);
@@ -32,6 +32,13 @@ namespace FischBot.Modules
             {
                 await Context.Message.AddReactionAsync(new Emoji(emoji));
             }
+        }
+
+        [Command("lamp")]
+        [Summary("Announces that the lamp has spoken, thus ending arguments.")]
+        public async Task TheLampHasSpoken()
+        {
+            await ReplyAsync("https://cdn.discordapp.com/attachments/347573265515937808/895307577087361104/unknown.png");
         }
     }
 }
