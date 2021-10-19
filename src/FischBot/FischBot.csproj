@@ -3,8 +3,8 @@
   <PropertyGroup>
     <OutputType>Exe</OutputType>
     <TargetFramework>net5.0</TargetFramework>
-    <AssemblyVersion>0.3.5</AssemblyVersion>
-    <Version>0.3-combfish-rev5</Version>
+    <AssemblyVersion>0.3.6</AssemblyVersion>
+    <Version>0.3-combfish-rev6</Version>
     <Deterministic>false</Deterministic>
   </PropertyGroup>
 
