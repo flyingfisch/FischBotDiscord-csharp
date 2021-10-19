@@ -10,7 +10,6 @@ using FischBot.Api.CalendarificHolidaysApiClient;
 using FischBot.Api.NasaApiClient;
 using FischBot.Api.OpenWeatherMapApiClient;
 using FischBot.Api.StarsAndStripesDailyClient;
-using FischBot.Api.StatsDbClient;
 using FischBot.Handlers;
 using FischBot.Services;
 using FischBot.Services.AstronomyService;
@@ -18,7 +17,6 @@ using FischBot.Services.DiscordModuleService;
 using FischBot.Services.FinanceService;
 using FischBot.Services.HolidayService;
 using FischBot.Services.ImageChartService;
-using FischBot.Services.RainbowSixService;
 using FischBot.Services.WeatherService;
 using HtmlAgilityPack;
 using Microsoft.Extensions.Configuration;
@@ -81,10 +79,8 @@ namespace FischBot
                 .AddSingleton<HtmlWeb>()
                 .AddSingleton<IDiscordModuleService, DiscordModuleService>()
                 .AddSingleton<IStarsAndStripesDailyClient, StarsAndStripesDailyClient>()
-                .AddSingleton<IStatsDbClient, StatsDbClient>()
                 .AddSingleton<ICalendarificHolidaysApiClient, CalendarificHolidaysApiClient>()
                 .AddSingleton<IOpenWeatherMapApiClient, OpenWeatherMapApiClient>()
-                .AddSingleton<IRainbowSixService, RainbowSixService>()
                 .AddSingleton<IHolidayService, HolidayService>()
                 .AddSingleton<IFinanceService, FinanceService>()
                 .AddSingleton<IImageChartService, ImageChartService>()
