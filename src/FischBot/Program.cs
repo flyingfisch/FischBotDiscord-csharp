@@ -8,6 +8,7 @@ using Discord.Commands;
 using Discord.WebSocket;
 using FischBot.Api.CalendarificHolidaysApiClient;
 using FischBot.Api.NasaApiClient;
+using FischBot.Api.OpenWeatherMapApiClient;
 using FischBot.Api.StarsAndStripesDailyClient;
 using FischBot.Api.StatsDbClient;
 using FischBot.Handlers;
@@ -18,6 +19,7 @@ using FischBot.Services.FinanceService;
 using FischBot.Services.HolidayService;
 using FischBot.Services.ImageChartService;
 using FischBot.Services.RainbowSixService;
+using FischBot.Services.WeatherService;
 using HtmlAgilityPack;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -81,12 +83,14 @@ namespace FischBot
                 .AddSingleton<IStarsAndStripesDailyClient, StarsAndStripesDailyClient>()
                 .AddSingleton<IStatsDbClient, StatsDbClient>()
                 .AddSingleton<ICalendarificHolidaysApiClient, CalendarificHolidaysApiClient>()
+                .AddSingleton<IOpenWeatherMapApiClient, OpenWeatherMapApiClient>()
                 .AddSingleton<IRainbowSixService, RainbowSixService>()
                 .AddSingleton<IHolidayService, HolidayService>()
                 .AddSingleton<IFinanceService, FinanceService>()
                 .AddSingleton<IImageChartService, ImageChartService>()
                 .AddSingleton<INasaApiClient, NasaApiClient>()
                 .AddSingleton<IAstronomyService, AstronomyService>()
+                .AddSingleton<IWeatherService, WeatherService>()
                 .AddSingleton<LoggingService>()
                 .AddLogging(configure => configure.AddSerilog());
 
