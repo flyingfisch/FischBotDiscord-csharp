@@ -4,7 +4,7 @@ using System.Text.Json.Serialization;
 
 namespace FischBot.Api.OpenWeatherMapApiClient.Dtos
 {
-    public class Percipitation
+    public class Precipitation
     {
         /// <summary>
         ///     Volume for the last 1 hour in millimeters

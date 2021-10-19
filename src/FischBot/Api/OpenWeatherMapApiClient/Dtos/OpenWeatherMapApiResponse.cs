@@ -61,13 +61,13 @@ namespace FischBot.Api.OpenWeatherMapApiClient.Dtos
         ///     Rain information
         /// </summary>
         [JsonPropertyName("rain")]
-        public Percipitation Rain { get; set; }
+        public Precipitation Rain { get; set; }
 
         /// <summary>
         ///     Snow information
         /// </summary>
         [JsonPropertyName("snow")]
-        public Percipitation Snow { get; set; }
+        public Precipitation Snow { get; set; }
 
         /// <summary>
         /// Additional information

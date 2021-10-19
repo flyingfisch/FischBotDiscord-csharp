@@ -52,8 +52,6 @@ namespace FischBot.Api.OpenWeatherMapApiClient
 
             var json = await response.Content.ReadAsStringAsync();
 
-            var des = JsonSerializer.Deserialize<OpenWeatherMapApiResponse>(json);
-
             return JsonSerializer.Deserialize<OpenWeatherMapApiResponse>(json);
         }
     }
