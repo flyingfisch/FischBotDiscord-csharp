@@ -93,5 +93,24 @@ namespace FischBot.Modules
                 }
             }
         }
+
+        [Command("version")]
+        [Summary("Displays version information")]
+        public async Task DisplayVersionInformation()
+        {
+            var informationalVersion = Assembly.GetEntryAssembly().GetCustomAttribute<AssemblyInformationalVersionAttribute>().InformationalVersion;
+            var assemblyVersion = Assembly.GetEntryAssembly().GetName().Version;
+
+            var embed = new EmbedBuilder()
+                .WithTitle("FischBot Version and Runtime Information")
+                .AddField("Version", informationalVersion)
+                .AddField("Assembly Version", assemblyVersion.ToString())
+                .AddField("Operating System", Environment.OSVersion)
+                .AddField("64-Bit OS", Environment.Is64BitOperatingSystem)
+                .WithFooter("View my source code on Github! ♥ https://github.com/flyingfisch/FischBotDiscord-csharp");
+
+
+            await ReplyAsync(embed: embed.Build());
+        }
     }
 }
