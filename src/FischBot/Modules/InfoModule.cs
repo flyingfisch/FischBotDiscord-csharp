@@ -75,17 +75,19 @@ namespace FischBot.Modules
                     var parameterNames = command.Parameters.Select(p => $"[{p.Name}]");
                     var parameterSummaries = command.Parameters.Select(p => $"`{p.Name}`{(p.IsOptional ? " (optional)" : string.Empty)}: {p.Summary}");
 
-                    var usageStringBuilder = new StringBuilder(commandPrefix);
+                    var usageString = $"`{commandPrefix}";
 
                     if (!string.IsNullOrWhiteSpace(command.Module.Group))
                     {
-                        usageStringBuilder.Append(command.Module.Group + " ");
+                        usageString += command.Module.Group + " ";
                     }
+
+                    usageString += $"{command.Name} {string.Join(' ', parameterNames)}`";
 
                     var embed = new EmbedBuilder()
                         .WithTitle($"Help: {command.Name}")
                         .AddField("Summary", command.Summary)
-                        .AddField("Usage", usageStringBuilder.Append($"{command.Name} {string.Join(' ', parameterNames)}"))
+                        .AddField("Usage", usageString)
                         .AddField("Parameters", string.Join('\n', parameterSummaries))
                         .AddField("Aliases", commandAliases.Any() ? string.Join(", ", commandAliases) : "None");
 
