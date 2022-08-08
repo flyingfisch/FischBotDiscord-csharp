@@ -21,6 +21,7 @@
     <PackageReference Include="ScrapySharp" Version="3.0.0" />
     <PackageReference Include="Serilog.AspNetCore" Version="3.4.0" />
     <PackageReference Include="Serilog.Sinks.Console" Version="3.1.1" />
+    <PackageReference Include="TweetinviAPI" Version="5.0.4" />
     <PackageReference Include="TwelveDataSharp" Version="1.0.0.3" />
   </ItemGroup>
 
