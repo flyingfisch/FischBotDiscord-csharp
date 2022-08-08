@@ -9,12 +9,12 @@ using Discord.WebSocket;
 using FischBot.Api.CalendarificHolidaysApiClient;
 using FischBot.Api.NasaApiClient;
 using FischBot.Api.OpenWeatherMapApiClient;
-using FischBot.Api.StarsAndStripesDailyClient;
 using FischBot.Handlers;
 using FischBot.Services;
 using FischBot.Services.AstronomyService;
 using FischBot.Services.DiscordModuleService;
 using FischBot.Services.FinanceService;
+using FischBot.Services.HalfMastService;
 using FischBot.Services.HolidayService;
 using FischBot.Services.ImageChartService;
 using FischBot.Services.WeatherService;
@@ -78,9 +78,9 @@ namespace FischBot
                 .AddSingleton<HttpClient>()
                 .AddSingleton<HtmlWeb>()
                 .AddSingleton<IDiscordModuleService, DiscordModuleService>()
-                .AddSingleton<IStarsAndStripesDailyClient, StarsAndStripesDailyClient>()
                 .AddSingleton<ICalendarificHolidaysApiClient, CalendarificHolidaysApiClient>()
                 .AddSingleton<IOpenWeatherMapApiClient, OpenWeatherMapApiClient>()
+                .AddSingleton<IHalfMastService, HalfMastService>()
                 .AddSingleton<IHolidayService, HolidayService>()
                 .AddSingleton<IFinanceService, FinanceService>()
                 .AddSingleton<IImageChartService, ImageChartService>()
