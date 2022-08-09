@@ -1,14 +1,14 @@
 using System;
 using System.Threading.Tasks;
 using Discord;
-using Discord.Commands;
+using Discord.Interactions;
 using FischBot.Services.DiscordModuleService;
 using FischBot.Services.HolidayService;
 
 namespace FischBot.Modules
 {
-    [Group("holiday")]
-    public class HolidayModule : FischBotModuleBase<SocketCommandContext>
+    [Group("holiday", "Commands for counting down or displaying holidays")]
+    public class HolidayModule : FischBotInteractionModuleBase<SocketInteractionContext>
     {
         private readonly IHolidayService _holidayService;
 
@@ -17,28 +17,33 @@ namespace FischBot.Modules
             _holidayService = holidayService;
         }
 
-        [Summary("Displays days until a given holiday")]
-        [Command("countdown")]
-        public async Task GetDaysUntilHoliday([Remainder][Summary("Name of the holiday to get a countdown for.")] string holidayName)
+        [SlashCommand("countdown", "Displays days until a given holiday")]
+        public async Task GetDaysUntilHoliday([Summary(description: "Name of the holiday to get a countdown for.")] string holidayName)
         {
             var now = DateTime.Now;
 
-            var holiday = await _holidayService.GetHolidayByName(holidayName, "US", now.Year);
-
-            var daysUntilHoliday = holiday.Date.Subtract(now).Days;
-
-            if (daysUntilHoliday > 0)
+            try
             {
-                await ReplyAsync($"There are {daysUntilHoliday} days until {holiday.Name}.");
+                var holiday = await _holidayService.GetHolidayByName(holidayName, "US", now.Year);
+
+                var daysUntilHoliday = holiday.Date.Subtract(now).Days;
+
+                if (daysUntilHoliday > 0)
+                {
+                    await RespondAsync($"There are {daysUntilHoliday} days until {holiday.Name}.");
+                }
+                else
+                {
+                    await RespondAsync($"{holiday.Name} was {daysUntilHoliday * -1} days ago.");
+                }
             }
-            else
+            catch
             {
-                await ReplyAsync($"{holiday.Name} was {daysUntilHoliday * -1} days ago.");
+                await RespondAsync("Could not find that holiday.", ephemeral: true);
             }
         }
 
-        [Summary("Displays today's holiday(s)")]
-        [Command("today")]
+        [SlashCommand("today", "Displays today's holiday(s)")]
         public async Task GetTodaysHolidays()
         {
             var now = DateTime.Now;
@@ -55,11 +60,11 @@ namespace FischBot.Modules
                     embed.AddField(holiday.Name, holiday.Type);
                 }
 
-                await ReplyAsync(embed: embed.Build());
+                await RespondAsync(embed: embed.Build());
             }
             else
             {
-                await ReplyAsync("There are no US holidays today.");
+                await RespondAsync("There are no US holidays today.");
             }
         }
     }
