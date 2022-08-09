@@ -6,6 +6,17 @@ namespace FischBot.Services.DiscordModuleService
 {
     public interface IDiscordModuleService
     {
+        Task RespondAsync(
+            IInteractionContext context,
+            string text = null,
+            Embed[] embeds = null, 
+            bool isTTS = false,
+            bool ephemeral = false,
+            AllowedMentions allowedMentions = null,
+            RequestOptions options = null,
+            MessageComponent components = null,
+            Embed embed = null);
+
         Task<IUserMessage> ReplyAsync(
             ICommandContext context,
             string text = null,

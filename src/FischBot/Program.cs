@@ -69,12 +69,11 @@ namespace FischBot
                     {
                         var testGuildId = _configuration.GetValue<ulong>("FischBot:testGuildId");
 
-                        var interactionService = services
-                            .GetRequiredService<InteractionService>();
+                        var registeredCommands = await services
+                            .GetRequiredService<InteractionService>()
+                            .RegisterCommandsToGuildAsync(testGuildId, true);
 
-                        var commands = await interactionService.RegisterCommandsToGuildAsync(testGuildId, true);
-
-                        Console.WriteLine($"Interaction Commands: {string.Join(',', commands.Select(command => command.Name))}");
+                        Console.WriteLine($"Registered the following interaction commands: {string.Join(',', registeredCommands.Select(command => command.Name))}");
                     }
                     else 
                     {
