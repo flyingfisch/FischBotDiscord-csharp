@@ -25,12 +25,27 @@ namespace FischBot.Modules
 
             var embed = new EmbedBuilder()
                 .WithTitle($"{apod.Date.ToString("d")}: {apod.Name}")
-                .WithImageUrl(apod.Url)
                 .WithDescription(apod.Caption)
-                .WithFooter("NASA Astronomy Picture of the Day")
-                .Build();
+                .WithFooter("NASA Astronomy Picture of the Day");
+            
+            if (apod.MediaType.ToLower() == "video")
+            {
+                var videoEmbed = embed
+                    .WithUrl(apod.Url)
+                    .AddField("Watch Video", apod.Url)
+                    .WithImageUrl(apod.ThumbnailUrl)
+                    .Build();
+                
+                await ReplyAsync(embed: videoEmbed);
+            }
+            else 
+            {
+                var imageEmbed = embed
+                    .WithImageUrl(apod.Url)
+                    .Build();
 
-            await ReplyAsync(embed: embed);
+                await ReplyAsync(embed: imageEmbed);
+            }
         }
     }
 }
