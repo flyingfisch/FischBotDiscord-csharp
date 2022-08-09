@@ -21,7 +21,7 @@ namespace FischBot.Api.NasaApiClient
         public async Task<ApodResponse> GetAstronomyPictureOfTheDay(DateTime? date)
         {
             var dateQueryParameter = date != null ? $"date={date?.ToString("yyyy-MM-dd")}" : string.Empty;
-            var response = await _httpClient.GetAsync($"{_nasaApiBaseUrl}planetary/apod?api_key={_nasaApiKey}&{dateQueryParameter}");
+            var response = await _httpClient.GetAsync($"{_nasaApiBaseUrl}planetary/apod?api_key={_nasaApiKey}&{dateQueryParameter}&thumbs=true");
 
             response.EnsureSuccessStatusCode();
 

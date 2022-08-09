@@ -23,6 +23,7 @@ namespace FischBot.Services.AstronomyService
                 Name = response.Title,
                 Caption = response.Explanation,
                 Url = response.Url,
+                ThumbnailUrl = response.Thumbnail_Url,
                 MediaType = response.Media_Type,
                 Date = response.Date
             };

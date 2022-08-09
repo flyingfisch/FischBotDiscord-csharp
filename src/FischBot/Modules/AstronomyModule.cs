@@ -32,6 +32,8 @@ namespace FischBot.Modules
             {
                 var videoEmbed = embed
                     .WithUrl(apod.Url)
+                    .AddField("Watch Video", apod.Url)
+                    .WithImageUrl(apod.ThumbnailUrl)
                     .Build();
                 
                 await ReplyAsync(embed: videoEmbed);
