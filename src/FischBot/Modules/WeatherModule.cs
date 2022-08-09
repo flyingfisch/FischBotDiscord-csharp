@@ -1,5 +1,5 @@
 ﻿using Discord;
-using Discord.Commands;
+using Discord.Interactions;
 using FischBot.Services.DiscordModuleService;
 using FischBot.Services.WeatherService;
 using System.Net.Http;
@@ -7,8 +7,8 @@ using System.Threading.Tasks;
 
 namespace FischBot.Modules
 {
-    [Group("weather")]
-    public class WeatherModule : FischBotModuleBase<SocketCommandContext>
+    [Group("weather", "Weather commands")]
+    public class WeatherModule : FischBotInteractionModuleBase<SocketInteractionContext>
     {
         private readonly IWeatherService _weatherService;
 
@@ -17,9 +17,8 @@ namespace FischBot.Modules
             _weatherService = weatherService;
         }
 
-        [Command("city")]
-        [Summary("Gets the weather for a specified city.")]
-        public async Task GetWeatherForCity([Summary("The city name. (e.g. London, \"New York\")")] string cityName)
+        [SlashCommand("city", "Gets the weather for a specified city.")]
+        public async Task GetWeatherForCity([Summary(description: "The city name. (e.g. London, \"New York\")")] string cityName)
         {
             try
             {
@@ -36,22 +35,21 @@ namespace FischBot.Modules
                     .WithColor(0, 255, 255)
                     .Build();
 
-                await ReplyAsync(embed: embed);
+                await RespondAsync(embed: embed);
             }
             catch (HttpRequestException ex)
             {
                 switch (ex.StatusCode)
                 {
                     case System.Net.HttpStatusCode.NotFound:
-                        await ReplyAsync("Sorry, the city you are looking for wasn't found.\n(tip: try surrounding the city name in quotes like this \"New York\")");
+                        await RespondAsync("Sorry, the city you are looking for wasn't found.\n(tip: try surrounding the city name in quotes like this: \"New York\")", ephemeral: true);
                         break;
                 }
             }
         }
 
-        [Command("zip")]
-        [Summary("Gets the weather for a specified postal code.")]
-        public async Task GetWeatherForPostalCode([Summary("The postal code. (e.g., 45014)")] string postalCode)
+        [SlashCommand("zip", "Gets the weather for a specified postal code.")]
+        public async Task GetWeatherForPostalCode([Summary(description: "The postal code. (e.g., 45014)")] string postalCode)
         {
             try
             {
@@ -68,14 +66,14 @@ namespace FischBot.Modules
                     .WithColor(0, 255, 255)
                     .Build();
 
-                await ReplyAsync(embed: embed);
+                await RespondAsync(embed: embed);
             }
             catch (HttpRequestException ex)
             {
                 switch (ex.StatusCode)
                 {
                     case System.Net.HttpStatusCode.NotFound:
-                        await ReplyAsync("Sorry, the city you are looking for wasn't found.");
+                        await RespondAsync("Sorry, the city you are looking for wasn't found.", ephemeral: true);
                         break;
                 }
             }
