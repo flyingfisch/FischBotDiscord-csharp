@@ -45,8 +45,6 @@ namespace FischBot.Handlers
             }
             catch (Exception ex)
             {
-                _logger.LogError($"Command failed to execute for [{context.User.Username}] <-> [{ex.Message}]!");
-
                 if (interaction.Type == InteractionType.ApplicationCommand)
                 {
                     await interaction.GetOriginalResponseAsync().ContinueWith(async (msg) => await msg.Result.DeleteAsync());
@@ -62,8 +60,8 @@ namespace FischBot.Handlers
             }
             else
             {
-                _logger.LogError($"Command failed to execute for [{context.User.Username}] <-> [{result}]!");
-                await context.Channel.SendMessageAsync($"Sorry, {context.User.Username}... something went wrong -> [{result}]!");
+                _logger.LogError($"Component command failed to execute for [{context.User.Username}] <-> [{result}]!");
+                await context.Interaction.RespondAsync($"Sorry, {context.User.Username}... something went wrong -> [{result}]!", ephemeral: true);
             }
         }
 
@@ -75,8 +73,8 @@ namespace FischBot.Handlers
             }
             else
             {
-                _logger.LogError($"Command failed to execute for [{context.User.Username}] <-> [{result}]!");
-                await context.Channel.SendMessageAsync($"Sorry, {context.User.Username}... something went wrong -> [{result}]!");
+                _logger.LogError($"Context command failed to execute for [{context.User.Username}] <-> [{result}]!");
+                await context.Interaction.RespondAsync($"Sorry, {context.User.Username}... something went wrong -> [{result}]!", ephemeral: true);
             }
         }
 
@@ -88,8 +86,8 @@ namespace FischBot.Handlers
             }
             else
             {
-                _logger.LogError($"Command failed to execute for [{context.User.Username}] <-> [{result}]!");
-                await context.Channel.SendMessageAsync($"Sorry, {context.User.Username}... something went wrong -> [{result}]!");
+                _logger.LogError($"Slash command failed to execute for [{context.User.Username}] <-> [{result}]!");
+                await context.Interaction.RespondAsync($"Sorry, {context.User.Username}... something went wrong -> [{result}]!", ephemeral: true);
             }
         }
     }

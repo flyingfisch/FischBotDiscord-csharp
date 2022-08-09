@@ -48,7 +48,6 @@ namespace FischBot.Modules
                 .WithDescription(choicesDescription)
                 .Build();
 
-
             await RespondAsync(embed: embed);
 
             // react to the embed we just sent with letters for each option
