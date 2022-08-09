@@ -41,7 +41,11 @@ namespace FischBot.UnitTests.Modules
                                                                             It.IsAny<Embed>(),
                                                                             It.IsAny<RequestOptions>(),
                                                                             It.IsAny<AllowedMentions>(),
-                                                                            It.IsAny<MessageReference>()), Times.Once);
+                                                                            It.IsAny<MessageReference>(),
+                                                                            It.IsAny<MessageComponent>(),
+                                                                            It.IsAny<ISticker[]>(),
+                                                                            It.IsAny<Embed[]>(),
+                                                                            It.IsAny<MessageFlags>()), Times.Once);
         }
 
         [TestMethod]
@@ -61,7 +65,11 @@ namespace FischBot.UnitTests.Modules
                                                                             It.IsAny<Embed>(),
                                                                             It.IsAny<RequestOptions>(),
                                                                             It.IsAny<AllowedMentions>(),
-                                                                            It.IsAny<MessageReference>()), Times.Once);
+                                                                            It.IsAny<MessageReference>(),
+                                                                            It.IsAny<MessageComponent>(),
+                                                                            It.IsAny<ISticker[]>(),
+                                                                            It.IsAny<Embed[]>(),
+                                                                            It.IsAny<MessageFlags>()), Times.Once);
         }
 
         private InfoModule BuildInfoModule()

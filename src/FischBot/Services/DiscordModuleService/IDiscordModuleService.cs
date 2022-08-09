@@ -13,6 +13,10 @@ namespace FischBot.Services.DiscordModuleService
             Embed embed = null,
             RequestOptions options = null,
             AllowedMentions allowedMentions = null,
-            MessageReference messageReference = null);
+            MessageReference messageReference = null,
+            MessageComponent components = null,
+            ISticker[] stickers = null,
+            Embed[] embeds = null,
+            MessageFlags flags = MessageFlags.None);
     }
 }

@@ -14,15 +14,19 @@ namespace FischBot.Modules
             _module = moduleService;
         }
 
-        protected override async Task<IUserMessage> ReplyAsync(
+        protected async Task<IUserMessage> ReplyAsync(
             string message = null,
             bool isTTS = false,
             Embed embed = null,
             RequestOptions options = null,
             AllowedMentions allowedMentions = null,
-            MessageReference messageReference = null)
+            MessageReference messageReference = null,
+            MessageComponent components = null,
+            ISticker[] stickers = null,
+            Embed[] embeds = null,
+            MessageFlags flags = MessageFlags.None)
         {
-            return await _module.ReplyAsync(Context, message, isTTS, embed, options, allowedMentions, messageReference);
+            return await _module.ReplyAsync(Context, message, isTTS, embed, options, allowedMentions, messageReference, components, stickers, embeds, flags);
         }
     }
 }
