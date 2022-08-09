@@ -51,13 +51,12 @@ namespace FischBot.Modules
             await RespondAsync(embed: embed);
 
             // react to the embed we just sent with letters for each option
-            var originalResponse = await GetOriginalResponseAsync();
-            for (int i = 0; i < choices.Count(); i++)
-            {
-                var emoji = new Emoji(char.ConvertFromUtf32(_letterPollEmoji[i]));
+            var choiceEmojis = _letterPollEmoji
+                .Take(choices.Count())
+                .Select(emoji => new Emoji(char.ConvertFromUtf32(emoji)));
 
-                await originalResponse.AddReactionAsync(emoji);
-            }
+            var originalResponse = await GetOriginalResponseAsync();
+            await originalResponse.AddReactionsAsync(choiceEmojis);
         }
     }
 }
