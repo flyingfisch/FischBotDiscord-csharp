@@ -13,9 +13,13 @@ namespace FischBot.Services.DiscordModuleService
             Embed embed = null,
             RequestOptions options = null,
             AllowedMentions allowedMentions = null,
-            MessageReference messageReference = null)
+            MessageReference messageReference = null,
+            MessageComponent components = null,
+            ISticker[] stickers = null,
+            Embed[] embeds = null,
+            MessageFlags flags = MessageFlags.None)
         {
-            return await context.Channel.SendMessageAsync(text, isTTS, embed, options, allowedMentions, messageReference).ConfigureAwait(false);
+            return await context.Channel.SendMessageAsync(text, isTTS, embed, options, allowedMentions, messageReference, components, stickers, embeds, flags).ConfigureAwait(false);
         }
     }
 }
