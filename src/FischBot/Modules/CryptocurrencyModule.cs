@@ -1,15 +1,14 @@
 using System;
-using System.Linq;
 using System.Threading.Tasks;
 using Discord;
-using Discord.Commands;
+using Discord.Interactions;
 using FischBot.Services.DiscordModuleService;
 using FischBot.Services.FinanceService;
 
 namespace FischBot.Modules
 {
-    [Group("crypto")]
-    public class CryptocurrencyModule : FischBotModuleBase<SocketCommandContext>
+    [Group("crypto", "Cryptocurrency commands")]
+    public class CryptocurrencyModule : FischBotInteractionModuleBase<SocketInteractionContext>
     {
         private readonly IFinanceService _financeService;
 
@@ -18,9 +17,8 @@ namespace FischBot.Modules
             _financeService = financeService;
         }
 
-        [Command("price")]
-        [Summary("Gets today's price information for the specified crypto symbol.")]
-        public async Task DisplayRealtimeCryptoInfo([Summary("Crypto symbol to get information for")] string symbol)
+        [SlashCommand("price", "Gets today's price information for the specified crypto symbol.")]
+        public async Task DisplayRealtimeCryptoInfo([Summary(description: "Crypto symbol to get information for")] string symbol)
         {
             try
             {
@@ -46,11 +44,11 @@ namespace FischBot.Modules
                     .WithFooter($"Source: twelvedata | Daily usage: {usageStats.daily_usage}/{usageStats.plan_daily_limit}")
                     .Build();
 
-                await ReplyAsync(embed: embed);
+                await RespondAsync(embed: embed);
             }
             catch (Exception)
             {
-                await ReplyAsync("Unable to get information for that cryptocurrency.");
+                await RespondAsync("Unable to get information for that cryptocurrency.", ephemeral: true);
             }
         }
     }
