@@ -1,13 +1,14 @@
 using System;
+using System.Threading;
 using System.Threading.Tasks;
 using Discord;
-using Discord.Commands;
+using Discord.Interactions;
 using FischBot.Services.DiscordModuleService;
 using FischBot.Services.HalfMastService;
 
 namespace FischBot.Modules
 {
-    public class HalfMastModule : FischBotModuleBase<SocketCommandContext>
+    public class HalfMastModule : FischBotInteractionModuleBase<SocketInteractionContext>
     {
         private readonly IHalfMastService _halfMastService;
 
@@ -16,16 +17,21 @@ namespace FischBot.Modules
             _halfMastService = halfMastService;
         }
 
-        [Command("halfmast")]
-        [Alias("halfstaff")]
-        [Summary("Displays latest half mast information about the US flag. By default it shows nationwide half mast alerts, but if a state is specified it will show the latest local half mast alert instead.")]
-        public async Task DisplayHalfMastInformationAsync([Remainder][Summary("The state to show half mast alerts for. (optional)")] string state = "Entire United States")
+        [SlashCommand("halfmast", "Displays latest half mast information about the US flag.")]
+        public async Task DisplayHalfMastInformationAsync([Summary(description: "The state to show half mast alerts for. (optional, returns nationwide alerts if unspecified)")] string state = null)
         {
             var latestHalfMastNotice = await _halfMastService.GetLatestHalfMastNotice(state);
 
             if (latestHalfMastNotice is null) 
             {
-                await ReplyAsync("I couldn't find any recent half mast alerts.");
+                if (string.IsNullOrEmpty(state))
+                {
+                    await RespondAsync($"I couldn't find any recent half mast alerts for the entire US.");
+                }
+                else
+                {
+                    await RespondAsync($"I couldn't find any recent half mast alerts for {Thread.CurrentThread.CurrentCulture.TextInfo.ToTitleCase(state)}.");
+                }
             }
             else 
             {
@@ -36,13 +42,13 @@ namespace FischBot.Modules
                     .WithFooter($"Source: {latestHalfMastNotice.SourceUrl}",
                         $"https://raw.githubusercontent.com/flyingfisch/FischBotDiscord-csharp/master/assets/us-flag.png");
 
-                await ReplyAsync(embed: embedBuilder.Build());
+                await RespondAsync(embed: embedBuilder.Build());
             }
         }
 
         private string CreateHalfMastInfoEmbedTitle(string state)
         {
-            if (state.ToLower() == "entire united states") 
+            if (string.IsNullOrEmpty(state)) 
             {
                 return "Latest Half Mast Alert";
             }

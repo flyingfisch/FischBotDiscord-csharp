@@ -13,15 +13,11 @@ namespace FischBot.UnitTests.Modules
     public class InfoModuleTests
     {
         private Mock<IDiscordModuleService> _moduleService;
-        private Mock<CommandService> _commands;
-        private Mock<IConfiguration> _configuration;
 
         [TestInitialize]
         public void InitializeDependencies()
         {
             _moduleService = new Mock<IDiscordModuleService>();
-            _commands = new Mock<CommandService>();
-            _configuration = new Mock<IConfiguration>();
         }
 
         [TestMethod]
@@ -35,17 +31,15 @@ namespace FischBot.UnitTests.Modules
             await infoModule.SayAsync(echoMessage);
 
             // Assert
-            _moduleService.Verify(moduleService => moduleService.ReplyAsync(It.IsAny<ICommandContext>(),
-                                                                            It.Is<string>(m => m == echoMessage),
-                                                                            It.IsAny<bool>(),
-                                                                            It.IsAny<Embed>(),
-                                                                            It.IsAny<RequestOptions>(),
-                                                                            It.IsAny<AllowedMentions>(),
-                                                                            It.IsAny<MessageReference>(),
-                                                                            It.IsAny<MessageComponent>(),
-                                                                            It.IsAny<ISticker[]>(),
-                                                                            It.IsAny<Embed[]>(),
-                                                                            It.IsAny<MessageFlags>()), Times.Once);
+            _moduleService.Verify(moduleService => moduleService.RespondAsync(It.IsAny<IInteractionContext>(),
+                                                                              It.Is<string>(m => m == echoMessage),
+                                                                              It.IsAny<Embed[]>(),
+                                                                              It.IsAny<bool>(),
+                                                                              It.IsAny<bool>(),
+                                                                              It.IsAny<AllowedMentions>(),
+                                                                              It.IsAny<RequestOptions>(),
+                                                                              It.IsAny<MessageComponent>(),
+                                                                              It.IsAny<Embed>()), Times.Once);
         }
 
         [TestMethod]
@@ -59,22 +53,20 @@ namespace FischBot.UnitTests.Modules
             await infoModule.ReceivePraiseAsync();
 
             // Assert
-            _moduleService.Verify(moduleService => moduleService.ReplyAsync(It.IsAny<ICommandContext>(),
-                                                                            It.Is<string>(m => m == blushEmoji),
-                                                                            It.IsAny<bool>(),
-                                                                            It.IsAny<Embed>(),
-                                                                            It.IsAny<RequestOptions>(),
-                                                                            It.IsAny<AllowedMentions>(),
-                                                                            It.IsAny<MessageReference>(),
-                                                                            It.IsAny<MessageComponent>(),
-                                                                            It.IsAny<ISticker[]>(),
-                                                                            It.IsAny<Embed[]>(),
-                                                                            It.IsAny<MessageFlags>()), Times.Once);
+            _moduleService.Verify(moduleService => moduleService.RespondAsync(It.IsAny<IInteractionContext>(),
+                                                                              It.Is<string>(m => m == blushEmoji),
+                                                                              It.IsAny<Embed[]>(),
+                                                                              It.IsAny<bool>(),
+                                                                              It.IsAny<bool>(),
+                                                                              It.IsAny<AllowedMentions>(),
+                                                                              It.IsAny<RequestOptions>(),
+                                                                              It.IsAny<MessageComponent>(),
+                                                                              It.IsAny<Embed>()), Times.Once);
         }
 
         private InfoModule BuildInfoModule()
         {
-            return new InfoModule(_moduleService.Object, _commands.Object, _configuration.Object);
+            return new InfoModule(_moduleService.Object);
         }
     }
 }

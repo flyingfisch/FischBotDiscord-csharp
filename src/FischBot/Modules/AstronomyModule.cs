@@ -1,14 +1,14 @@
 using System;
 using System.Threading.Tasks;
 using Discord;
-using Discord.Commands;
+using Discord.Interactions;
 using FischBot.Services.AstronomyService;
 using FischBot.Services.DiscordModuleService;
 
 namespace FischBot.Modules
 {
-    [Group("astro")]
-    public class AstronomyModule : FischBotModuleBase<SocketCommandContext>
+    [Group("astro", "Astronomy commands")]
+    public class AstronomyModule : FischBotInteractionModuleBase<SocketInteractionContext>
     {
         private readonly IAstronomyService _astronomyService;
 
@@ -17,9 +17,8 @@ namespace FischBot.Modules
             _astronomyService = astronomyService;
         }
 
-        [Command("apod")]
-        [Summary("Displays the NASA astronomy picture of the day.")]
-        public async Task DisplayApod([Summary("Date to query for.")] DateTime? date = null)
+        [SlashCommand("apod", "Displays the NASA astronomy picture of the day")]
+        public async Task DisplayApod([Summary(description: "Date to query for (optional)")] DateTime? date = null)
         {
             var apod = await _astronomyService.GetPictureOfTheDay(date);
 
@@ -36,7 +35,7 @@ namespace FischBot.Modules
                     .WithImageUrl(apod.ThumbnailUrl)
                     .Build();
                 
-                await ReplyAsync(embed: videoEmbed);
+                await RespondAsync(embed: videoEmbed);
             }
             else 
             {
@@ -44,7 +43,7 @@ namespace FischBot.Modules
                     .WithImageUrl(apod.Url)
                     .Build();
 
-                await ReplyAsync(embed: imageEmbed);
+                await RespondAsync(embed: imageEmbed);
             }
         }
     }

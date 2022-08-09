@@ -1,10 +1,12 @@
 ﻿using System;
 using System.IO;
+using System.Linq;
 using System.Net.Http;
 using System.Threading;
 using System.Threading.Tasks;
 using Discord;
 using Discord.Commands;
+using Discord.Interactions;
 using Discord.WebSocket;
 using FischBot.Api.CalendarificHolidaysApiClient;
 using FischBot.Api.NasaApiClient;
@@ -58,7 +60,30 @@ namespace FischBot
             {
                 services.GetRequiredService<LoggingService>();
 
-                await _discordClient.SetGameAsync($"{_configuration.GetSection("FischBot:commandPrefix").Value}help");
+                await services.GetRequiredService<InteractionHandler>().InitializeAsync();
+
+                _discordClient.Ready += async () =>
+                {
+                    // If running the bot with DEBUG flag, register all commands to guild specified in config
+                    if (IsDebug()) 
+                    {
+                        var testGuildId = _configuration.GetValue<ulong>("FischBot:testGuildId");
+
+                        var registeredCommands = await services
+                            .GetRequiredService<InteractionService>()
+                            .RegisterCommandsToGuildAsync(testGuildId, true);
+
+                        Console.WriteLine($"Registered the following interaction commands: {string.Join(',', registeredCommands.Select(command => command.Name))}");
+                    }
+                    else 
+                    {
+                        await services
+                            .GetRequiredService<InteractionService>()
+                            .RegisterCommandsGloballyAsync(true);
+                    }
+                };
+
+                await _discordClient.SetGameAsync("Type / to see commands");
                 await _discordClient.LoginAsync(TokenType.Bot, _configuration.GetSection("FischBot:token").Value);
                 await _discordClient.StartAsync();
 
@@ -75,6 +100,8 @@ namespace FischBot
                 .AddSingleton(_discordClient)
                 .AddSingleton<CommandService>()
                 .AddSingleton<CommandHandler>()
+                .AddSingleton(x => new InteractionService(x.GetRequiredService<DiscordSocketClient>()))
+                .AddSingleton<InteractionHandler>()
                 .AddSingleton<HttpClient>()
                 .AddSingleton<HtmlWeb>()
                 .AddSingleton<IDiscordModuleService, DiscordModuleService>()
@@ -98,6 +125,15 @@ namespace FischBot
             Console.WriteLine(message.ToString());
 
             return Task.CompletedTask;
+        }
+
+        static bool IsDebug()
+        {
+#if DEBUG
+            return true;
+#else
+            return false;
+#endif
         }
     }
 }

@@ -4,14 +4,14 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Discord;
-using Discord.Commands;
+using Discord.Interactions;
 using FischBot.Helpers;
 using FischBot.Services.DiscordModuleService;
 
 namespace FischBot.Modules
 {
-    [Group("games")]
-    public class GameModule : FischBotModuleBase<SocketCommandContext>
+    [Group("games", "A collection of text games")]
+    public class GameModule : FischBotInteractionModuleBase<SocketInteractionContext>
     {
         private readonly List<(string Phrase, int Level)> _eightBallResults;
         private static readonly Random Random = new Random();
@@ -48,9 +48,8 @@ namespace FischBot.Modules
         /// </summary>
         /// <param name="question">Users question for the Magic 8-Ball.</param>
         /// <returns></returns>
-        [Command("8ball")]
-        [Summary("Asks the Magic 8-Ball for the answer that you seek.")]
-        public async Task QuestionThe8Ball([Remainder][Summary("The question for which you seek an answer.")] string question)
+        [SlashCommand("8ball", "Asks the Magic 8-Ball for the answer that you seek.")]
+        public async Task QuestionThe8Ball([Summary(description: "The question for which you seek an answer.")] string question)
         {
             // Jumble our possible results.
             var stringBuilder = new StringBuilder();
@@ -73,7 +72,9 @@ namespace FischBot.Modules
             await Task.Run(async () =>
             {
                 // Output the initial message for the user, and wait 1 second.
-                var message = await ReplyAsync(embed: embedBuilder.Build()).ConfigureAwait(false);
+                await RespondAsync(embed: embedBuilder.Build()).ConfigureAwait(false);
+                var message = await GetOriginalResponseAsync();
+
                 await Task.Delay(1000).ConfigureAwait(false);
 
                 // Append the next step in the process for the user, building up to the answer. Wait 1 more second.

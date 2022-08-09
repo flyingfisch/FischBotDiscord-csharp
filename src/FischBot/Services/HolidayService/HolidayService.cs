@@ -23,9 +23,11 @@ namespace FischBot.Services.HolidayService
             var getHolidaysResponse = await _calendarificHolidaysApiClient.GetHolidays(country, year);
 
             var holidayResponse = getHolidaysResponse.Response.Holidays
-                .First(holiday => holidayNameRegex.Replace(holiday.Name, "").ToLower().Contains(
+                .Where(holiday => holidayNameRegex.Replace(holiday.Name, "").ToLower().Contains(
                     holidayNameRegex.Replace(holidayName, "").ToLower()
-                ));
+                ))
+                .OrderBy(holiday => holiday.Name.Length)
+                .FirstOrDefault();
 
             if (holidayResponse == null)
             {
