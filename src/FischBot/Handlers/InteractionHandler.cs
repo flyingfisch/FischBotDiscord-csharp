@@ -43,7 +43,7 @@ namespace FischBot.Handlers
             {
                 await _commands.ExecuteCommandAsync(context, _services);
             }
-            catch (Exception ex)
+            catch (Exception)
             {
                 if (interaction.Type == InteractionType.ApplicationCommand)
                 {
