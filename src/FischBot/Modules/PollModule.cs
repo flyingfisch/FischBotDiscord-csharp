@@ -1,12 +1,14 @@
 using System;
+using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 using Discord;
-using Discord.Commands;
+using Discord.Interactions;
 using FischBot.Services.DiscordModuleService;
 
 namespace FischBot.Modules
 {
-    public class PollModule : FischBotModuleBase<SocketCommandContext>
+    public class PollModule : FischBotInteractionModuleBase<SocketInteractionContext>
     {
         private static readonly Int32[] _letterPollEmoji =
         { 
@@ -20,24 +22,42 @@ namespace FischBot.Modules
         {
         }
 
-        [Command("poll")]
-        [Summary("Reacts to the message with emoji to start a poll.")]
-        public async Task CreateLetterPoll(
-            [Summary("The number of options to create")] int numberOfOptions,
-            [Summary("Your poll message")][Remainder] string message = null)
+        [SlashCommand("poll", "Up to 10 options")]
+        public async Task CreatePoll(
+            [Summary(description: "Poll Message")] string message,
+            string choice1 = null,
+            string choice2 = null,
+            string choice3 = null,
+            string choice4 = null,
+            string choice5 = null,
+            string choice6 = null,
+            string choice7 = null,
+            string choice8 = null,
+            string choice9 = null,
+            string choice10 = null)
         {
-            if (numberOfOptions > 20)
-            {
-                await ReplyAsync("The maximum number of options is 20.");
-            }
-            else
-            {
-                for (int i = 0; i < numberOfOptions; i++)
-                {
-                    var emoji = new Emoji(char.ConvertFromUtf32(_letterPollEmoji[i]));
+            var choices = new List<string>() { choice1, choice2, choice3, choice4, choice5, choice6, choice7, choice8, choice9, choice10 }
+                .Where(choice => !string.IsNullOrEmpty(choice));
 
-                    await Context.Message.AddReactionAsync(emoji);
-                }
+            var choicesWithLetterEmoji = choices.Select((choice, index) => $"{char.ConvertFromUtf32(_letterPollEmoji[index])}: {choice}");
+            var choicesDescription = string.Join("\n", choicesWithLetterEmoji);
+
+            // build embed for poll message and options
+            var embed = new EmbedBuilder()
+                .WithTitle($"POLL: {message}")
+                .WithDescription(choicesDescription)
+                .Build();
+
+
+            await RespondAsync(embed: embed);
+
+            // react to the embed we just sent with letters for each option
+            var originalResponse = await GetOriginalResponseAsync();
+            for (int i = 0; i < choices.Count(); i++)
+            {
+                var emoji = new Emoji(char.ConvertFromUtf32(_letterPollEmoji[i]));
+
+                await originalResponse.AddReactionAsync(emoji);
             }
         }
     }
