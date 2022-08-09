@@ -1,4 +1,3 @@
-using Discord.Commands;
 using FischBot.Services.DiscordModuleService;
 using System.Threading.Tasks;
 using Discord;
@@ -6,16 +5,23 @@ using System;
 using FischBot.Services.FinanceService;
 using System.Linq;
 using FischBot.Services.ImageChartService;
-using System.IO;
-using FischBot.Models.Finance;
+using Discord.Interactions;
 
 namespace FischBot.Modules
 {
-    [Group("stocks")]
-    public class StocksModule : FischBotModuleBase<SocketCommandContext>
+    [Group("stocks", "Stock market commands")]
+    public class StocksModule : FischBotInteractionModuleBase<SocketInteractionContext>
     {
         private readonly IFinanceService _financeService;
         private readonly IImageChartService _imageChartService;
+
+        public enum TimePeriod
+        {
+            Week,
+            Month,
+            Year
+        }
+
 
         public StocksModule(IDiscordModuleService moduleService, IFinanceService financeService, IImageChartService imageChartService) : base(moduleService)
         {
@@ -23,9 +29,8 @@ namespace FischBot.Modules
             _imageChartService = imageChartService;
         }
 
-        [Command("price")]
-        [Summary("Gets realtime information for the specified stock.")]
-        public async Task DisplayRealtimeStockInfo([Summary("Stock to get information for")] string symbol)
+        [SlashCommand("price", "Gets realtime information for the specified stock.")]
+        public async Task DisplayRealtimeStockInfo([Summary(description: "Stock to get information for")] string symbol)
         {
             try
             {
@@ -52,17 +57,16 @@ namespace FischBot.Modules
                     .WithFooter($"Source: twelvedata | Daily usage: {usageStats.daily_usage}/{usageStats.plan_daily_limit}")
                     .Build();
 
-                await ReplyAsync(embed: embed);
+                await RespondAsync(embed: embed);
             }
             catch (Exception)
             {
-                await ReplyAsync("Unable to get information for that stock.");
+                await RespondAsync("Unable to get information for that stock.", ephemeral: true);
             }
         }
 
-        [Command("chart")]
-        [Summary("Displays a chart for the specified stock.")]
-        public async Task DisplayStockChart([Summary("Stock symbol")] string symbol, [Summary("Time period to display for")] string period = "week")
+        [SlashCommand("chart", "Displays a chart for the specified stock.")]
+        public async Task DisplayStockChart([Summary(description: "Stock symbol")] string symbol, [Summary(description: "Time period to display for (optional)")] TimePeriod period = TimePeriod.Week)
         {
             var dataset = await GetDataSet(symbol, period);
             var lineColor = dataset.First() < dataset.Last() ? "2ECC71" : "E74C3C";
@@ -73,12 +77,12 @@ namespace FischBot.Modules
                 500,
                 100);
 
-            await Context.Channel.SendFileAsync(chartImage, "chart.png");
+            await RespondWithFileAsync(chartImage, "chart.png");
         }
 
-        private async Task<decimal[]> GetDataSet(string symbol, string period)
+        private async Task<decimal[]> GetDataSet(string symbol, TimePeriod period)
         {
-            if (period == "week")
+            if (period == TimePeriod.Week)
             {
                 var timeSeries = await _financeService.GetTimeSeries(symbol, "2h");
 
@@ -90,7 +94,7 @@ namespace FischBot.Modules
                     .ToArray();
             }
 
-            if (period == "month")
+            if (period == TimePeriod.Month)
             {
                 var timeSeries = await _financeService.GetTimeSeries(symbol, "1day");
 
@@ -102,7 +106,7 @@ namespace FischBot.Modules
                     .ToArray();
             }
 
-            if (period == "year")
+            if (period == TimePeriod.Year)
             {
                 var timeSeries = await _financeService.GetTimeSeries(symbol, "1month");
 
