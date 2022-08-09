@@ -1,5 +1,6 @@
 {
     "FischBot": {
+        "testGuildId": "guild id to register slash commands with when running in debug mode",
         "token": "yourtokengoeshere",
         "commandPrefix": "^",
         "holidaysApiKey": "calendarific holidays api key",
