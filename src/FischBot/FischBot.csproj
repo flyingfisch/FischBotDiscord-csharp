@@ -2,7 +2,7 @@
 
   <PropertyGroup>
     <OutputType>Exe</OutputType>
-    <TargetFramework>net5.0</TargetFramework>
+    <TargetFramework>net6.0</TargetFramework>
     <AssemblyVersion>0.3.7</AssemblyVersion>
     <Version>0.3-combfish-rev7</Version>
     <Deterministic>false</Deterministic>
