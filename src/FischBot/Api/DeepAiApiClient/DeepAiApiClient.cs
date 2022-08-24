@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using System.IO;
 using System.Net.Http;
 using System.Threading.Tasks;
 using FischBot.Api.DeepAiApiClient.Dtos;
@@ -20,6 +21,14 @@ namespace FischBot.Api.DeepAiApiClient
 
         public async Task<TextToImageResponse> GetImageFromText(string text)
         {
+            var imageData = await GenerateImage(text);
+            imageData.ImageStream = await DownloadImage(imageData.Output_Url);
+
+            return imageData;
+        }
+
+        private async Task<TextToImageResponse> GenerateImage(string text) 
+        {
             var requestData = new Dictionary<string, string>() 
             {
                 { "text", text }
@@ -32,8 +41,14 @@ namespace FischBot.Api.DeepAiApiClient
 
             response.EnsureSuccessStatusCode();
 
-            var test = await response.Content.ReadAsStringAsync();
             return await response.Content.ReadAsAsync<TextToImageResponse>();
+        }
+
+        private async Task<Stream> DownloadImage(string imageUrl)
+        {
+            var image = await _httpClient.GetAsync(imageUrl);
+
+            return await image.Content.ReadAsStreamAsync();
         }
     }
 }

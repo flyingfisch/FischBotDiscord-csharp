@@ -1,4 +1,4 @@
-using System;
+using System.IO;
 
 namespace FischBot.Api.DeepAiApiClient.Dtos
 {
@@ -6,5 +6,6 @@ namespace FischBot.Api.DeepAiApiClient.Dtos
     {
         public string Id { get; set; }
         public string Output_Url { get; set; }
+        public Stream ImageStream { get; set; }
     }
 }
