@@ -20,12 +20,7 @@ namespace FischBot.Modules
         [SlashCommand("imagefromtext", "Displays AI-generated image from text")]
         public async Task DisplayImageFromText([Summary(description: "text to generate an image from")] string text) 
         {
-            var pleaseWaitEmbed = new EmbedBuilder()
-                .WithTitle(text)
-                .WithDescription("Your image is being generated, this may take a moment.")
-                .Build();
-
-            await RespondAsync(embed: pleaseWaitEmbed, ephemeral: true);
+            await RespondAsync("Your image is being generated, this may take a moment.");
 
             try
             {
@@ -41,12 +36,7 @@ namespace FischBot.Modules
             }
             catch (Exception)
             {
-                var errorMessageEmbed = new EmbedBuilder()
-                    .WithTitle(text)
-                    .WithDescription("I'm sorry, something went wrong while I was generating this image :(")
-                    .Build();
-
-                await FollowupAsync(embed: errorMessageEmbed);
+                await FollowupAsync("I'm sorry, something went wrong while I was generating this image :(");
             }
         }
     }
