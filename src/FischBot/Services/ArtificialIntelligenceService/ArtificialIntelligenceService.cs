@@ -18,7 +18,11 @@ namespace FischBot.Services.ArtificialIntelligenceService
         {
             var imageFromText = await _deepAiClient.GetImageFromText(text);
 
-            return new TextToImageData() { ImageUrl = imageFromText.Output_Url };
+            return new TextToImageData()
+            {
+                ImageUrl = imageFromText.Output_Url,
+                ImageDataUri = imageFromText.Data_Uri
+            };
         }
     }
 }
