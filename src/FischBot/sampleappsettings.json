@@ -3,6 +3,7 @@
         "testGuildId": "guild id to register slash commands with when running in debug mode",
         "token": "yourtokengoeshere",
         "commandPrefix": "^",
+        "deepAiApiKey": "DeepAI api key",
         "holidaysApiKey": "calendarific holidays api key",
         "twelveDataApiKey": "twelvedata stocks api key",
         "nasaApiKey": "nasa api key",
