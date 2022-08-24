@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Net.Http;
 using System.Threading.Tasks;
 using FischBot.Api.DeepAiApiClient.Dtos;
@@ -22,7 +23,7 @@ namespace FischBot.Api.DeepAiApiClient
         public async Task<TextToImageResponse> GetImageFromText(string text)
         {
             var imageData = await GenerateImage(text);
-            imageData.Data_Uri = await GenerateImageBase64DataUri(imageData.Output_Url);
+            imageData.ImageStream = await DownloadImage(imageData.Output_Url);
 
             return imageData;
         }
@@ -44,14 +45,11 @@ namespace FischBot.Api.DeepAiApiClient
             return await response.Content.ReadAsAsync<TextToImageResponse>();
         }
 
-        private async Task<string> GenerateImageBase64DataUri(string imageUrl)
+        private async Task<Stream> DownloadImage(string imageUrl)
         {
             var image = await _httpClient.GetAsync(imageUrl);
-            var imageArray = await image.Content.ReadAsByteArrayAsync();
 
-            var dataUri = $"data:image/jpeg,base64,{Convert.ToBase64String(imageArray)}";
-
-            return dataUri;
+            return await image.Content.ReadAsStreamAsync();
         }
     }
 }

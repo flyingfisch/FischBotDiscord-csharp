@@ -21,7 +21,7 @@ namespace FischBot.Services.ArtificialIntelligenceService
             return new TextToImageData()
             {
                 ImageUrl = imageFromText.Output_Url,
-                ImageDataUri = imageFromText.Data_Uri
+                ImageStream = imageFromText.ImageStream
             };
         }
     }
