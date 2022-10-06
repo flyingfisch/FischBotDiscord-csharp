@@ -18,14 +18,14 @@ namespace FischBot.Handlers
         private readonly IServiceProvider _services;
         private readonly ILogger _logger;
 
-        public CommandHandler(IServiceProvider services)
+        public CommandHandler(IServiceProvider services, IConfiguration configuration, CommandService commandService, DiscordSocketClient discordClient, ILogger<CommandHandler> logger)
         {
-            _configuration = services.GetRequiredService<IConfiguration>();
-            _commands = services.GetRequiredService<CommandService>();
-            _discordClient = services.GetRequiredService<DiscordSocketClient>();
-            _logger = services.GetRequiredService<ILogger<CommandHandler>>();
-
             _services = services;
+
+            _configuration = configuration;
+            _commands = commandService;
+            _discordClient = discordClient;
+            _logger = logger;
 
             _commands.CommandExecuted += CommandExecutedAsync;
             _discordClient.MessageReceived += MessageReceivedAsync;

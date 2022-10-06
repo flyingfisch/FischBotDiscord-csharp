@@ -16,12 +16,12 @@ namespace FischBot.Handlers
         private readonly IServiceProvider _services;
         private readonly ILogger _logger;
 
-        public InteractionHandler(DiscordSocketClient discordClient, InteractionService commands, IServiceProvider services) 
+        public InteractionHandler(DiscordSocketClient discordClient, InteractionService commands, IServiceProvider services, ILogger<InteractionHandler> logger) 
         {
             _discordClient = discordClient;
             _commands = commands;
             _services = services;
-            _logger = services.GetRequiredService<ILogger<InteractionHandler>>();
+            _logger = logger;
         }
     
         public async Task InitializeAsync() 
