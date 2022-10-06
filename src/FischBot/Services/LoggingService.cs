@@ -14,11 +14,11 @@ namespace FischBot.Services
         private readonly DiscordSocketClient _discordClient;
         private readonly CommandService _commands;
 
-        public LoggingService(IServiceProvider services)
+        public LoggingService(IServiceProvider services, DiscordSocketClient discordClient, CommandService commandService, ILogger<LoggingService> logger)
         {
-            _discordClient = services.GetRequiredService<DiscordSocketClient>();
-            _commands = services.GetRequiredService<CommandService>();
-            _logger = services.GetRequiredService<ILogger<LoggingService>>();
+            _discordClient = discordClient;
+            _commands = commandService;
+            _logger = logger;
 
             _discordClient.Ready += OnReadyAsync;
 
