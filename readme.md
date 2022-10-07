@@ -39,3 +39,15 @@ If you are using the a release package, do the following:
 ## Contributing
 
 Contributions are welcome! Please create a new branch for the item you are working on, and submit a pull request when it is ready.
+
+### Project Architecture
+
+The project is divided into a few main sections:
+
+* APIs
+* Services
+* Modules
+
+`Modules` are very similar to controllers if you've used an MVC framework before, and have methods for each of the bot's supported commands. `Services` methods are called by `modules`, and house the bot's application logic. `APIs` are called by `services`, and handle low-level logic like HTTP requests. 
+
+Some APIs the bot integrates with have their own Nuget packages to help integrate with the API. In these cases, instead of making a class in the `Api` folder, we use the classes from the API's Nuget package directly in the `Services` classes.
