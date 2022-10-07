@@ -1,9 +1,11 @@
 using System;
+using System.Linq;
 using System.Reflection;
 using System.Threading.Tasks;
 using Discord;
 using Discord.Interactions;
 using Discord.WebSocket;
+using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 
@@ -15,13 +17,15 @@ namespace FischBot.Handlers
         private readonly InteractionService _commands;
         private readonly IServiceProvider _services;
         private readonly ILogger _logger;
+        private readonly IConfiguration _configuration;
 
-        public InteractionHandler(DiscordSocketClient discordClient, InteractionService commands, IServiceProvider services, ILogger<InteractionHandler> logger) 
+        public InteractionHandler(IConfiguration configuration, DiscordSocketClient discordClient, InteractionService commands, IServiceProvider services, ILogger<InteractionHandler> logger) 
         {
             _discordClient = discordClient;
             _commands = commands;
             _services = services;
             _logger = logger;
+            _configuration = configuration;
         }
     
         public async Task InitializeAsync() 
@@ -33,6 +37,27 @@ namespace FischBot.Handlers
             _commands.SlashCommandExecuted += SlashCommandExecuted;
             _commands.ContextCommandExecuted += ContextCommandExecuted;
             _commands.ComponentCommandExecuted += ComponentCommandExecuted;
+
+            _discordClient.Ready += async () =>
+            {
+                // If running the bot with DEBUG flag, register all commands to guild specified in config
+                if (IsDebug()) 
+                {
+                    var testGuildId = _configuration.GetValue<ulong>("FischBot:testGuildId");
+
+                    var registeredCommands = await _services
+                        .GetRequiredService<InteractionService>()
+                        .RegisterCommandsToGuildAsync(testGuildId, true);
+
+                    Console.WriteLine($"Registered the following interaction commands: {string.Join(',', registeredCommands.Select(command => command.Name))}");
+                }
+                else 
+                {
+                    await _services
+                        .GetRequiredService<InteractionService>()
+                        .RegisterCommandsGloballyAsync(true);
+                }
+            };
         }
 
         private async Task HandleInteraction(SocketInteraction interaction) 
@@ -89,6 +114,15 @@ namespace FischBot.Handlers
                 _logger.LogError($"Slash command failed to execute for [{context.User.Username}] <-> [{result}]!");
                 await context.Interaction.RespondAsync($"Sorry, {context.User.Username}... something went wrong -> [{result}]!", ephemeral: true);
             }
+        }
+
+        static bool IsDebug()
+        {
+#if DEBUG
+            return true;
+#else
+            return false;
+#endif
         }
     }
 }
