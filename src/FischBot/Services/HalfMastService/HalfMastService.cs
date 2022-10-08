@@ -1,4 +1,5 @@
 using System.Linq;
+using System.Net;
 using System.Threading;
 using System.Threading.Tasks;
 using FischBot.Models;
@@ -16,7 +17,7 @@ namespace FischBot.Services.HalfMastService
         private readonly string _twitterApiAccessToken;
         private readonly string _twitterApiAccessTokenSecret;
 
-        private const string _halfMastAlertsTwitterAccountName = "HalfStaffAlerts";
+        private const string HalfMastAlertsTwitterAccountName = "HalfStaffAlerts";
 
         private readonly TwitterClient _twitterClient;
 
@@ -39,24 +40,22 @@ namespace FischBot.Services.HalfMastService
         public async Task<HalfMastNotice> GetLatestHalfMastNotice(string state)
         {
             var searchState = string.IsNullOrEmpty(state) ? "Entire United States" : state;
-            var response = await _twitterClient.SearchV2.SearchTweetsAsync($"(from: {_halfMastAlertsTwitterAccountName}) {searchState}");
+            var response = await _twitterClient.SearchV2.SearchTweetsAsync($"(from: {HalfMastAlertsTwitterAccountName}) {searchState}");
             var latestHalfMastTweet = response.Tweets.FirstOrDefault();
 
-            if (latestHalfMastTweet != null) 
+            if (latestHalfMastTweet != null)
             {
-                var halfMastNotice = new HalfMastNotice() 
+                var halfMastNotice = new HalfMastNotice()
                 {
-                    State = Thread.CurrentThread.CurrentCulture.TextInfo.ToTitleCase(searchState),
+                    State = WebUtility.HtmlDecode(Thread.CurrentThread.CurrentCulture.TextInfo.ToTitleCase(searchState)),
                     Description = latestHalfMastTweet.Text,
-                    SourceUrl = $"https://twitter.com/{_halfMastAlertsTwitterAccountName}/status/{latestHalfMastTweet.Id}"
+                    SourceUrl = $"https://twitter.com/{HalfMastAlertsTwitterAccountName}/status/{latestHalfMastTweet.Id}"
                 };
 
                 return halfMastNotice;
             }
-            else 
-            {
-                return null;
-            }
+
+            return null;
         }
     }
 }
