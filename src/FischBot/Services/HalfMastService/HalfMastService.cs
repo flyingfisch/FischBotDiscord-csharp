@@ -40,7 +40,7 @@ namespace FischBot.Services.HalfMastService
         public async Task<HalfMastNotice> GetLatestHalfMastNotice(string state)
         {
             var searchState = string.IsNullOrEmpty(state) ? "Entire United States" : state;
-            var response = await _twitterClient.SearchV2.SearchTweetsAsync($"(from: {HalfMastAlertsTwitterAccountName}) {searchState}");
+            var response = await _twitterClient.SearchV2.SearchTweetsAsync($"(from: {_halfMastAlertsTwitterAccountName}) {searchState}");
             var latestHalfMastTweet = response.Tweets.FirstOrDefault();
 
             if (latestHalfMastTweet != null)
