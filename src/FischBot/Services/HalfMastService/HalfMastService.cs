@@ -49,7 +49,7 @@ namespace FischBot.Services.HalfMastService
                 {
                     State = WebUtility.HtmlDecode(Thread.CurrentThread.CurrentCulture.TextInfo.ToTitleCase(searchState)),
                     Description = latestHalfMastTweet.Text,
-                    SourceUrl = $"https://twitter.com/{HalfMastAlertsTwitterAccountName}/status/{latestHalfMastTweet.Id}"
+                    SourceUrl = $"https://twitter.com/{_halfMastAlertsTwitterAccountName}/status/{latestHalfMastTweet.Id}"
                 };
 
                 return halfMastNotice;
