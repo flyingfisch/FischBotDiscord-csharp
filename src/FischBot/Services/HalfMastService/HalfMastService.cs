@@ -17,7 +17,7 @@ namespace FischBot.Services.HalfMastService
         private readonly string _twitterApiAccessToken;
         private readonly string _twitterApiAccessTokenSecret;
 
-        private const string HalfMastAlertsTwitterAccountName = "HalfStaffAlerts";
+        private const string _halfMastAlertsTwitterAccountName = "HalfStaffAlerts";
 
         private readonly TwitterClient _twitterClient;
 
@@ -54,8 +54,10 @@ namespace FischBot.Services.HalfMastService
 
                 return halfMastNotice;
             }
-
-            return null;
+            else
+            {
+                return null;
+            }
         }
     }
 }
