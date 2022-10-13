@@ -1,4 +1,5 @@
 using System.Linq;
+using System.Net;
 using System.Threading;
 using System.Threading.Tasks;
 using FischBot.Models;
@@ -42,18 +43,18 @@ namespace FischBot.Services.HalfMastService
             var response = await _twitterClient.SearchV2.SearchTweetsAsync($"(from: {_halfMastAlertsTwitterAccountName}) {searchState}");
             var latestHalfMastTweet = response.Tweets.FirstOrDefault();
 
-            if (latestHalfMastTweet != null) 
+            if (latestHalfMastTweet != null)
             {
-                var halfMastNotice = new HalfMastNotice() 
+                var halfMastNotice = new HalfMastNotice()
                 {
-                    State = Thread.CurrentThread.CurrentCulture.TextInfo.ToTitleCase(searchState),
+                    State = WebUtility.HtmlDecode(Thread.CurrentThread.CurrentCulture.TextInfo.ToTitleCase(searchState)),
                     Description = latestHalfMastTweet.Text,
                     SourceUrl = $"https://twitter.com/{_halfMastAlertsTwitterAccountName}/status/{latestHalfMastTweet.Id}"
                 };
 
                 return halfMastNotice;
             }
-            else 
+            else
             {
                 return null;
             }
