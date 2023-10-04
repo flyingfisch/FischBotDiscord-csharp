@@ -10,6 +10,7 @@ using Discord.Interactions;
 using Discord.WebSocket;
 using FischBot.Api.CalendarificHolidaysApiClient;
 using FischBot.Api.DeepAiApiClient;
+using FischBot.Api.HalfStaffJsScraperClient;
 using FischBot.Api.NasaApiClient;
 using FischBot.Api.OpenWeatherMapApiClient;
 using FischBot.Handlers;
@@ -88,6 +89,7 @@ namespace FischBot
                 .AddSingleton<IDiscordModuleService, DiscordModuleService>()
                 .AddSingleton<ICalendarificHolidaysApiClient, CalendarificHolidaysApiClient>()
                 .AddSingleton<IOpenWeatherMapApiClient, OpenWeatherMapApiClient>()
+                .AddSingleton<IHalfStaffJsScraperClient, HalfStaffJsScraperClient>()
                 .AddSingleton<IHalfMastService, HalfMastService>()
                 .AddSingleton<IHolidayService, HolidayService>()
                 .AddSingleton<IFinanceService, FinanceService>()

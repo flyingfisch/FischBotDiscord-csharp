@@ -8,9 +8,5 @@
         "twelveDataApiKey": "twelvedata stocks api key",
         "nasaApiKey": "nasa api key",
         "weatherApiKey": "openweathermap api key",
-        "twitterApiConsumerKey": "twitter api consumer key",
-        "twitterApiConsumerSecret": "twitter api consumer secret",
-        "twitterApiAccessToken": "twitter api access token",
-        "twitterApiAccessTokenSecret": "twitter api access token secret"
     }
 }
