@@ -25,7 +25,7 @@ namespace FischBot.Modules
 
             if (halfMastStatus.IsHalfStaff)
             {
-                var embedTitle = CreateHalfMastInfoEmbedTitle(halfMastStatus.State);
+                var embedTitle = CreateHalfMastInfoEmbedTitle(halfMastStatus.State, halfMastStatus.IsHalfStaff);
                 var embedBuilder = new EmbedBuilder()
                     .WithTitle(embedTitle)
                     .WithDescription(halfMastStatus.Description)
@@ -36,26 +36,39 @@ namespace FischBot.Modules
             }
             else
             {
-                if (string.IsNullOrEmpty(stateAbbreviation))
-                {
-                    await RespondAsync($"I couldn't find any recent half mast alerts for the entire US.");
-                }
-                else
-                {
-                    await RespondAsync($"I couldn't find any recent half mast alerts for {stateAbbreviation.ToUpper()}.");
-                }
+                var embedTitle = CreateHalfMastInfoEmbedTitle(halfMastStatus.State, halfMastStatus.IsHalfStaff);
+                var embedBuilder = new EmbedBuilder()
+                    .WithTitle(embedTitle)
+                    .WithFooter($"Source: {halfMastStatus.SourceUrl}",
+                        $"https://raw.githubusercontent.com/flyingfisch/FischBotDiscord-csharp/master/assets/us-flag.png");
+
+                await RespondAsync(embed: embedBuilder.Build());
             }
         }
 
-        private string CreateHalfMastInfoEmbedTitle(string state)
+        private string CreateHalfMastInfoEmbedTitle(string state, bool isHalfMast)
         {
-            if (string.IsNullOrEmpty(state))
+            if (isHalfMast)
             {
-                return "The flag is at half mast";
+                if (string.IsNullOrEmpty(state))
+                {
+                    return $"The flag is at half mast";
+                }
+                else
+                {
+                    return $"The flag is at half mast in {state}";
+                }
             }
             else
             {
-                return $"The flag is at half mast in {state}";
+                if (string.IsNullOrEmpty(state))
+                {
+                    return $"The flag is not at half mast";
+                }
+                else
+                {
+                    return $"The flag is not at half mast in {state}";
+                }
             }
         }
     }
