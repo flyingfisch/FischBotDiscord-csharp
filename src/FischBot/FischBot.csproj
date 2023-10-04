@@ -2,8 +2,8 @@
   <PropertyGroup>
     <OutputType>Exe</OutputType>
     <TargetFramework>net6.0</TargetFramework>
-    <AssemblyVersion>0.4.3</AssemblyVersion>
-    <Version>0.4-dragonfish-rev3</Version>
+    <AssemblyVersion>0.4.4</AssemblyVersion>
+    <Version>0.4-dragonfish-rev4</Version>
     <Deterministic>false</Deterministic>
   </PropertyGroup>
   <ItemGroup>
