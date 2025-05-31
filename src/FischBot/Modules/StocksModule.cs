@@ -72,7 +72,14 @@ namespace FischBot.Modules
         public async Task DisplayStockChart([Summary(description: "Stock symbol")] string symbol,
                                             [Summary(description: "Time period to display for (optional)")] TimePeriod period = TimePeriod.Month)
         {
-            var timeSeriesValues = await GetTimeSeriesValues(symbol, period);
+            var interval = period switch
+            {
+                TimePeriod.Week => "1h",
+                TimePeriod.Month => "1day",
+                TimePeriod.SixMonths => "1week",
+                TimePeriod.Year => "1month",
+                _ => throw new NotImplementedException()
+            };
 
             var span = period switch
             {
@@ -83,6 +90,11 @@ namespace FischBot.Modules
                 _ => throw new NotImplementedException()
             };
 
+            var timeSeries = await _financeService.GetTimeSeries(symbol, interval);
+            var timeSeriesValues = timeSeries.Values
+                .OrderBy(value => value.Datetime.DateTime)
+                .ToList();
+
             var showYearInXAxis = period == TimePeriod.Year || period == TimePeriod.SixMonths;
 
             var chartImageStream = _imageChartService.CreateStockChart(
@@ -90,65 +102,16 @@ namespace FischBot.Modules
                 span,
                 showYearInXAxis);
 
-            await RespondWithFileAsync(chartImageStream, "chart.png");
-        }
+            var usageStats = await _financeService.GetApiUsageStats();
 
+            var embed = new EmbedBuilder()
+                .WithTitle($"{timeSeries.Symbol} Stock Chart")
+                .WithFooter($"Source: twelvedata | Daily usage: {usageStats.daily_usage}/{usageStats.plan_daily_limit}")
+                .Build();
 
-        private async Task<List<TimeSeriesValue>> GetTimeSeriesValues(string symbol, TimePeriod period)
-        {
-            switch (period)
-            {
-                case TimePeriod.Week:
-                    {
-                        var timeSeries = await _financeService.GetTimeSeries(symbol, "1h");
-
-                        var values = timeSeries.Values
-                            .Where(value => value.Datetime > DateTime.Now.AddDays(-7))
-                            .OrderBy(value => value.Datetime.DateTime)
-                            .ToList();
-
-                        return values;
-                    }
-
-                case TimePeriod.Month:
-                    {
-                        var timeSeries = await _financeService.GetTimeSeries(symbol, "1day");
-
-                        var values = timeSeries.Values
-                            .Where(value => value.Datetime > DateTime.Now.AddDays(-30))
-                            .OrderBy(value => value.Datetime.DateTime)
-                            .ToList();
-
-                        return values;
-                    }
-
-                case TimePeriod.SixMonths:
-                    {
-                        var timeSeries = await _financeService.GetTimeSeries(symbol, "1week");
-
-                        var values = timeSeries.Values
-                            .Where(value => value.Datetime > DateTime.Now.AddYears(-1))
-                            .OrderBy(value => value.Datetime.DateTime)
-                            .ToList();
-
-                        return values;
-                    }
-
-                case TimePeriod.Year:
-                    {
-                        var timeSeries = await _financeService.GetTimeSeries(symbol, "1month");
-
-                        var values = timeSeries.Values
-                            .Where(value => value.Datetime > DateTime.Now.AddYears(-1))
-                            .OrderBy(value => value.Datetime.DateTime)
-                            .ToList();
-
-                        return values;
-                    }
-
-                default:
-                    throw new NotImplementedException();
-            }
+            await RespondWithFileAsync(chartImageStream,
+                "chart.png",
+                embed: embed);
         }
     }
 }
