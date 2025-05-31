@@ -47,13 +47,13 @@ namespace FischBot.Modules
 
                     .AddField(
                         "Price",
-                        $"{price.ToString("C")} {(quote.Change > 0 ? "▲" : "▼")}{quote.Change.ToString("C")} ({quote.PercentChange.ToString("F2")}%)"
+                        $"{price:C} {(quote.Change > 0 ? "▲" : "▼")}{quote.Change:C} ({quote.PercentChange:F2}%)"
                     )
 
                     .AddField("Trading info for last trading day", quote.Datetime.ToString("d"))
 
-                    .AddField("Open/Close", $"{quote.Open.ToString("C")}/{quote.Close.ToString("C")}")
-                    .AddField("High/Low", $"{quote.High.ToString("C")}/{quote.Low.ToString("C")}")
+                    .AddField("Open/Close", $"{quote.Open:C}/{quote.Close:C}")
+                    .AddField("High/Low", $"{quote.High:C}/{quote.Low:C}")
 
                     .AddField("Volume", quote.Volume, inline: false)
 
