@@ -1,11 +1,7 @@
-using System;
 using System.Net.Http;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
-using Discord;
 using FischBot.Api.HalfStaffJsScraperClient.Dtos;
-using FischBot.Api.NasaApiClient.Dtos;
-using Microsoft.Extensions.Configuration;
 
 namespace FischBot.Api.HalfStaffJsScraperClient
 {

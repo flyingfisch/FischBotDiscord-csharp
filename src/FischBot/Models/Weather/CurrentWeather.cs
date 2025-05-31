@@ -1,8 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace FischBot.Models.Weather
 {
@@ -11,7 +7,7 @@ namespace FischBot.Models.Weather
         public string CityName { get; set; }
         public string CountryCode { get; set; }
         public string Location => $"{CityName}, {CountryCode}";
-        public string WeatherIconUrl { get; set;  }
+        public string WeatherIconUrl { get; set; }
         public string Weather { get; set; }
         public string WeatherDescription { get; set; }
         public DateTimeOffset DateCalculated { get; set; }

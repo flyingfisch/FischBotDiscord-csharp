@@ -6,8 +6,6 @@ using FischBot.Services.FinanceService;
 using System.Linq;
 using FischBot.Services.ImageChartService;
 using Discord.Interactions;
-using System.Collections.Generic;
-using FischBot.Models.Finance;
 
 namespace FischBot.Modules
 {
@@ -24,7 +22,6 @@ namespace FischBot.Modules
             SixMonths,
             Year
         }
-
 
         public StocksModule(IDiscordModuleService moduleService, IFinanceService financeService, IImageChartService imageChartService) : base(moduleService)
         {

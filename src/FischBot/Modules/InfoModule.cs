@@ -1,11 +1,9 @@
 using System;
-using System.Linq;
 using System.Reflection;
 using System.Threading.Tasks;
 using Discord;
 using Discord.Interactions;
 using FischBot.Services.DiscordModuleService;
-using Microsoft.Extensions.Configuration;
 
 namespace FischBot.Modules
 {
@@ -16,14 +14,14 @@ namespace FischBot.Modules
         }
 
         [SlashCommand("say", "Echoes a message.")]
-        public async Task SayAsync([Summary(description: "The text to echo.")] string echo, [Summary(description: "Whether to show your identity. (optional)")]bool anonymous = false)
+        public async Task SayAsync([Summary(description: "The text to echo.")] string echo, [Summary(description: "Whether to show your identity. (optional)")] bool anonymous = false)
         {
             if (anonymous)
             {
                 await ReplyAsync(echo);
                 await RespondAsync("_Shhh... I've said your super secret message._", ephemeral: true);
             }
-            else 
+            else
             {
                 await RespondAsync(echo);
             }
