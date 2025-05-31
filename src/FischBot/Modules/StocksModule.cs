@@ -6,6 +6,8 @@ using FischBot.Services.FinanceService;
 using System.Linq;
 using FischBot.Services.ImageChartService;
 using Discord.Interactions;
+using System.Collections.Generic;
+using FischBot.Models.Finance;
 
 namespace FischBot.Modules
 {
@@ -19,6 +21,7 @@ namespace FischBot.Modules
         {
             Week,
             Month,
+            SixMonths,
             Year
         }
 
@@ -66,59 +69,86 @@ namespace FischBot.Modules
         }
 
         [SlashCommand("chart", "Displays a chart for the specified stock.")]
-        public async Task DisplayStockChart([Summary(description: "Stock symbol")] string symbol, [Summary(description: "Time period to display for (optional)")] TimePeriod period = TimePeriod.Week)
+        public async Task DisplayStockChart([Summary(description: "Stock symbol")] string symbol,
+                                            [Summary(description: "Time period to display for (optional)")] TimePeriod period = TimePeriod.Month)
         {
-            var dataset = await GetDataSet(symbol, period);
-            var lineColor = dataset.First() < dataset.Last() ? "2ECC71" : "E74C3C";
+            var timeSeriesValues = await GetTimeSeriesValues(symbol, period);
 
-            var chartImage = _imageChartService.CreateLineChart(
-                dataset,
-                lineColor,
-                500,
-                100);
+            var span = period switch
+            {
+                TimePeriod.Week => TimeSpan.FromDays(7),
+                TimePeriod.Month => TimeSpan.FromDays(30),
+                TimePeriod.SixMonths => TimeSpan.FromDays(180),
+                TimePeriod.Year => TimeSpan.FromDays(365),
+                _ => throw new NotImplementedException()
+            };
 
-            await RespondWithFileAsync(chartImage, "chart.png");
+            var showYearInXAxis = period == TimePeriod.Year || period == TimePeriod.SixMonths;
+
+            var chartImageStream = _imageChartService.CreateStockChart(
+                timeSeriesValues,
+                span,
+                showYearInXAxis);
+
+            await RespondWithFileAsync(chartImageStream, "chart.png");
         }
 
-        private async Task<decimal[]> GetDataSet(string symbol, TimePeriod period)
+
+        private async Task<List<TimeSeriesValue>> GetTimeSeriesValues(string symbol, TimePeriod period)
         {
-            if (period == TimePeriod.Week)
+            switch (period)
             {
-                var timeSeries = await _financeService.GetTimeSeries(symbol, "2h");
+                case TimePeriod.Week:
+                    {
+                        var timeSeries = await _financeService.GetTimeSeries(symbol, "1h");
 
-                return timeSeries.Values
-                    .Where(value => value.Datetime > DateTime.Now.AddDays(-7))
-                    .OrderBy(value => value.Datetime)
-                    .Select(value => value.Open)
-                    .Take(7)
-                    .ToArray();
+                        var values = timeSeries.Values
+                            .Where(value => value.Datetime > DateTime.Now.AddDays(-7))
+                            .OrderBy(value => value.Datetime.DateTime)
+                            .ToList();
+
+                        return values;
+                    }
+
+                case TimePeriod.Month:
+                    {
+                        var timeSeries = await _financeService.GetTimeSeries(symbol, "1day");
+
+                        var values = timeSeries.Values
+                            .Where(value => value.Datetime > DateTime.Now.AddDays(-30))
+                            .OrderBy(value => value.Datetime.DateTime)
+                            .ToList();
+
+                        return values;
+                    }
+
+                case TimePeriod.SixMonths:
+                    {
+                        var timeSeries = await _financeService.GetTimeSeries(symbol, "1week");
+
+                        var values = timeSeries.Values
+                            .Where(value => value.Datetime > DateTime.Now.AddYears(-1))
+                            .OrderBy(value => value.Datetime.DateTime)
+                            .ToList();
+
+                        return values;
+                    }
+
+                case TimePeriod.Year:
+                    {
+                        var timeSeries = await _financeService.GetTimeSeries(symbol, "1month");
+
+                        var values = timeSeries.Values
+                            .Where(value => value.Datetime > DateTime.Now.AddYears(-1))
+                            .OrderBy(value => value.Datetime.DateTime)
+                            .ToList();
+
+                        return values;
+                    }
+
+                default:
+                    throw new NotImplementedException();
             }
-
-            if (period == TimePeriod.Month)
-            {
-                var timeSeries = await _financeService.GetTimeSeries(symbol, "1day");
-
-                return timeSeries.Values
-                    .Where(value => value.Datetime > DateTime.Now.AddMonths(-1))
-                    .OrderBy(value => value.Datetime)
-                    .Select(value => value.Open)
-                    .Take(7)
-                    .ToArray();
-            }
-
-            if (period == TimePeriod.Year)
-            {
-                var timeSeries = await _financeService.GetTimeSeries(symbol, "1month");
-
-                return timeSeries.Values
-                    .Where(value => value.Datetime > DateTime.Now.AddYears(-1))
-                    .OrderBy(value => value.Datetime)
-                    .Select(value => value.Open)
-                    .Take(7)
-                    .ToArray();
-            }
-
-            throw new NotImplementedException();
         }
     }
 }
