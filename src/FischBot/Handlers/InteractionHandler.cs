@@ -19,7 +19,7 @@ namespace FischBot.Handlers
         private readonly ILogger _logger;
         private readonly IConfiguration _configuration;
 
-        public InteractionHandler(IConfiguration configuration, DiscordSocketClient discordClient, InteractionService commands, IServiceProvider services, ILogger<InteractionHandler> logger) 
+        public InteractionHandler(IConfiguration configuration, DiscordSocketClient discordClient, InteractionService commands, IServiceProvider services, ILogger<InteractionHandler> logger)
         {
             _discordClient = discordClient;
             _commands = commands;
@@ -27,8 +27,8 @@ namespace FischBot.Handlers
             _logger = logger;
             _configuration = configuration;
         }
-    
-        public async Task InitializeAsync() 
+
+        public async Task InitializeAsync()
         {
             await _commands.AddModulesAsync(Assembly.GetEntryAssembly(), _services);
 
@@ -41,7 +41,7 @@ namespace FischBot.Handlers
             _discordClient.Ready += async () =>
             {
                 // If running the bot with DEBUG flag, register all commands to guild specified in config
-                if (IsDebug()) 
+                if (IsDebug())
                 {
                     var testGuildId = _configuration.GetValue<ulong>("FischBot:testGuildId");
 
@@ -51,7 +51,7 @@ namespace FischBot.Handlers
 
                     Console.WriteLine($"Registered the following interaction commands: {string.Join(',', registeredCommands.Select(command => command.Name))}");
                 }
-                else 
+                else
                 {
                     await _services
                         .GetRequiredService<InteractionService>()
@@ -60,11 +60,11 @@ namespace FischBot.Handlers
             };
         }
 
-        private async Task HandleInteraction(SocketInteraction interaction) 
+        private async Task HandleInteraction(SocketInteraction interaction)
         {
             var context = new SocketInteractionContext(_discordClient, interaction);
 
-            try 
+            try
             {
                 await _commands.ExecuteCommandAsync(context, _services);
             }
@@ -112,7 +112,10 @@ namespace FischBot.Handlers
             else
             {
                 _logger.LogError($"Slash command failed to execute for [{context.User.Username}] <-> [{result}]!");
-                await context.Interaction.RespondAsync($"Sorry, {context.User.Username}... something went wrong -> [{result}]!", ephemeral: true);
+                if (context.Interaction.HasResponded)
+                    await context.Interaction.RespondAsync($"Sorry, {context.User.Username}... something went wrong -> [{result}]!", ephemeral: true);
+                else
+                    await context.Interaction.FollowupAsync($"Sorry, {context.User.Username}... something went wrong -> [{result}]!", ephemeral: true);
             }
         }
 

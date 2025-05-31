@@ -19,9 +19,9 @@ namespace FischBot.Modules
         {
             Week,
             Month,
+            SixMonths,
             Year
         }
-
 
         public StocksModule(IDiscordModuleService moduleService, IFinanceService financeService, IImageChartService imageChartService) : base(moduleService)
         {
@@ -44,13 +44,13 @@ namespace FischBot.Modules
 
                     .AddField(
                         "Price",
-                        $"{price.ToString("C")} {(quote.Change > 0 ? "▲" : "▼")}{quote.Change.ToString("C")} ({quote.PercentChange.ToString("F2")}%)"
+                        $"{price:C} {(quote.Change > 0 ? "▲" : "▼")}{quote.Change:C} ({quote.PercentChange:F2}%)"
                     )
 
                     .AddField("Trading info for last trading day", quote.Datetime.ToString("d"))
 
-                    .AddField("Open/Close", $"{quote.Open.ToString("C")}/{quote.Close.ToString("C")}")
-                    .AddField("High/Low", $"{quote.High.ToString("C")}/{quote.Low.ToString("C")}")
+                    .AddField("Open/Close", $"{quote.Open:C}/{quote.Close:C}")
+                    .AddField("High/Low", $"{quote.High:C}/{quote.Low:C}")
 
                     .AddField("Volume", quote.Volume, inline: false)
 
@@ -66,59 +66,49 @@ namespace FischBot.Modules
         }
 
         [SlashCommand("chart", "Displays a chart for the specified stock.")]
-        public async Task DisplayStockChart([Summary(description: "Stock symbol")] string symbol, [Summary(description: "Time period to display for (optional)")] TimePeriod period = TimePeriod.Week)
+        public async Task DisplayStockChart([Summary(description: "Stock symbol")] string symbol,
+                                            [Summary(description: "Time period to display for (optional)")] TimePeriod period = TimePeriod.Month)
         {
-            var dataset = await GetDataSet(symbol, period);
-            var lineColor = dataset.First() < dataset.Last() ? "2ECC71" : "E74C3C";
-
-            var chartImage = _imageChartService.CreateLineChart(
-                dataset,
-                lineColor,
-                500,
-                100);
-
-            await RespondWithFileAsync(chartImage, "chart.png");
-        }
-
-        private async Task<decimal[]> GetDataSet(string symbol, TimePeriod period)
-        {
-            if (period == TimePeriod.Week)
+            var interval = period switch
             {
-                var timeSeries = await _financeService.GetTimeSeries(symbol, "2h");
+                TimePeriod.Week => "1h",
+                TimePeriod.Month => "1day",
+                TimePeriod.SixMonths => "1week",
+                TimePeriod.Year => "1month",
+                _ => throw new NotImplementedException()
+            };
 
-                return timeSeries.Values
-                    .Where(value => value.Datetime > DateTime.Now.AddDays(-7))
-                    .OrderBy(value => value.Datetime)
-                    .Select(value => value.Open)
-                    .Take(7)
-                    .ToArray();
-            }
-
-            if (period == TimePeriod.Month)
+            var span = period switch
             {
-                var timeSeries = await _financeService.GetTimeSeries(symbol, "1day");
+                TimePeriod.Week => TimeSpan.FromDays(7),
+                TimePeriod.Month => TimeSpan.FromDays(30),
+                TimePeriod.SixMonths => TimeSpan.FromDays(180),
+                TimePeriod.Year => TimeSpan.FromDays(365),
+                _ => throw new NotImplementedException()
+            };
 
-                return timeSeries.Values
-                    .Where(value => value.Datetime > DateTime.Now.AddMonths(-1))
-                    .OrderBy(value => value.Datetime)
-                    .Select(value => value.Open)
-                    .Take(7)
-                    .ToArray();
-            }
+            var timeSeries = await _financeService.GetTimeSeries(symbol, interval);
+            var timeSeriesValues = timeSeries.Values
+                .OrderBy(value => value.Datetime.DateTime)
+                .ToList();
 
-            if (period == TimePeriod.Year)
-            {
-                var timeSeries = await _financeService.GetTimeSeries(symbol, "1month");
+            var showYearInXAxis = period == TimePeriod.Year || period == TimePeriod.SixMonths;
 
-                return timeSeries.Values
-                    .Where(value => value.Datetime > DateTime.Now.AddYears(-1))
-                    .OrderBy(value => value.Datetime)
-                    .Select(value => value.Open)
-                    .Take(7)
-                    .ToArray();
-            }
+            var chartImageStream = _imageChartService.CreateStockChart(
+                timeSeriesValues,
+                span,
+                showYearInXAxis);
 
-            throw new NotImplementedException();
+            var usageStats = await _financeService.GetApiUsageStats();
+
+            var embed = new EmbedBuilder()
+                .WithTitle($"{timeSeries.Symbol} Stock Chart")
+                .WithFooter($"Source: twelvedata | Daily usage: {usageStats.daily_usage}/{usageStats.plan_daily_limit}")
+                .Build();
+
+            await RespondWithFileAsync(chartImageStream,
+                "chart.png",
+                embed: embed);
         }
     }
 }
