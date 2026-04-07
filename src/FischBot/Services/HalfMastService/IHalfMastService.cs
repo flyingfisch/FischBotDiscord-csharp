@@ -5,6 +5,6 @@ namespace FischBot.Services.HalfMastService
 {
     public interface IHalfMastService
     {
-        Task<HalfMastStatus> GetHalfMastStatus(string state);
+        Task<HalfMastStatus> GetHalfMastStatus();
     }
 }

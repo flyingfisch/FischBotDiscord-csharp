@@ -85,6 +85,7 @@ namespace FischBot
                 .AddSingleton<InteractionHandler>()
                 .AddSingleton<HttpClient>()
                 .AddSingleton<HtmlWeb>()
+                .AddSingleton<HalfStaffPageParser>()
                 .AddSingleton<IDiscordModuleService, DiscordModuleService>()
                 .AddSingleton<ICalendarificHolidaysApiClient, CalendarificHolidaysApiClient>()
                 .AddSingleton<IOpenWeatherMapApiClient, OpenWeatherMapApiClient>()

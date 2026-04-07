@@ -1,5 +1,5 @@
+using System;
 using System.Net.Http;
-using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using FischBot.Api.HalfStaffJsScraperClient.Dtos;
 
@@ -7,39 +7,60 @@ namespace FischBot.Api.HalfStaffJsScraperClient
 {
     public class HalfStaffJsScraperClient : IHalfStaffJsScraperClient
     {
-        private const string _halfStaffScriptUrl = "https://halfstaff.org/widgets/us-half-staff-flags.js";
-        private const string _halfStaffReasonRegexPattern = @"(?<=var dataevent =')(.*)(?=')";
+        private const string _currentNoticesUrl = "https://halfstaff.org/";
+        private const string _fallbackSourceUrl = "https://halfstaff.org/";
+        private static readonly TimeSpan _cacheDuration = TimeSpan.FromMinutes(15);
         private readonly HttpClient _httpClient;
+        private readonly HalfStaffPageParser _halfStaffPageParser;
+        private readonly object _cacheLock = new object();
+        private HalfStaffStatus _cachedStatus;
+        private DateTimeOffset _cacheExpiresAt;
 
-        public HalfStaffJsScraperClient(HttpClient httpClient)
+        public HalfStaffJsScraperClient(HttpClient httpClient, HalfStaffPageParser halfStaffPageParser)
         {
             _httpClient = httpClient;
+            _halfStaffPageParser = halfStaffPageParser;
         }
 
         /// <summary>
-        /// Gets the US flag's half staff status by scraping the javascript file that powers the halfstaff.org widget.
+        /// Gets the current half-staff status from the active notices section on halfstaff.org.
         /// </summary>
-        public async Task<HalfStaffStatus> GetHalfStaffStatus(string state = "")
+        public async Task<HalfStaffStatus> GetHalfStaffStatus()
         {
-            var requestUrl = string.IsNullOrEmpty(state) ? _halfStaffScriptUrl : $"{_halfStaffScriptUrl}?st={state}";
-            var response = await _httpClient.GetAsync(requestUrl);
-
-            response.EnsureSuccessStatusCode();
-
-            var responseString = await response.Content.ReadAsStringAsync();
-
-            // the first line of the JS file will look like this if the flag is at half staff: 
-            // var dataevent ='Half Staff in Honor of Dianne Feinstein';
-            // so we'll use that information to determine whether the flag is at half staff.
-            var halfStaffRegexResult = Regex.Match(responseString, _halfStaffReasonRegexPattern);
-            var halfStaffReason = halfStaffRegexResult.Groups[0].Value;
-            var isHalfStaff = !string.IsNullOrEmpty(halfStaffReason);
-
-            return new HalfStaffStatus()
+            var currentTime = DateTimeOffset.UtcNow;
+            lock (_cacheLock)
             {
-                IsHalfStaff = isHalfStaff,
-                Reason = halfStaffReason,
-            };
+                if (_cachedStatus != null && currentTime < _cacheExpiresAt)
+                {
+                    return _cachedStatus;
+                }
+            }
+
+            try
+            {
+                var response = await _httpClient.GetAsync(_currentNoticesUrl);
+
+                response.EnsureSuccessStatusCode();
+
+                var responseString = await response.Content.ReadAsStringAsync();
+                var halfStaffStatus = _halfStaffPageParser.ParseCurrentStatus(responseString, currentTime, _fallbackSourceUrl);
+
+                lock (_cacheLock)
+                {
+                    _cachedStatus = halfStaffStatus;
+                    _cacheExpiresAt = currentTime.Add(_cacheDuration);
+                }
+
+                return halfStaffStatus;
+            }
+            catch (Exception)
+            {
+                return new HalfStaffStatus
+                {
+                    IsStatusKnown = false,
+                    SourceUrl = _fallbackSourceUrl,
+                };
+            }
         }
     }
 }

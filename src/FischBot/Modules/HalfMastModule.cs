@@ -15,58 +15,44 @@ namespace FischBot.Modules
             _halfMastService = halfMastService;
         }
 
-        [SlashCommand("halfmast", "Displays latest half mast information about the US flag.")]
-        public async Task DisplayHalfMastInformationAsync([Summary(description: "The state to show half mast alerts for. (optional, returns nationwide alerts if unspecified)")] string stateAbbreviation = null)
+        [SlashCommand("halfmast", "Displays whether the U.S. flag is currently at half staff anywhere in the country.")]
+        public async Task DisplayHalfMastInformationAsync()
         {
-            var halfMastStatus = await _halfMastService.GetHalfMastStatus(stateAbbreviation);
+            var halfMastStatus = await _halfMastService.GetHalfMastStatus();
+
+            if (!halfMastStatus.IsStatusKnown)
+            {
+                var embedBuilder = new EmbedBuilder()
+                    .WithTitle("I couldn't verify the current half staff status")
+                    .WithDescription("The source page could not be parsed or reached.")
+                    .WithFooter($"Source: {halfMastStatus.SourceUrl}",
+                        $"https://raw.githubusercontent.com/flyingfisch/FischBotDiscord-csharp/master/assets/us-flag.png");
+
+                await RespondAsync(embed: embedBuilder.Build());
+
+                return;
+            }
 
             if (halfMastStatus.IsHalfStaff)
             {
-                var embedTitle = CreateHalfMastInfoEmbedTitle(halfMastStatus.State, halfMastStatus.IsHalfStaff);
                 var embedBuilder = new EmbedBuilder()
-                    .WithTitle(embedTitle)
+                    .WithTitle("The U.S. flag is at half mast")
                     .WithDescription(halfMastStatus.Description)
                     .WithFooter($"Source: {halfMastStatus.SourceUrl}",
                         $"https://raw.githubusercontent.com/flyingfisch/FischBotDiscord-csharp/master/assets/us-flag.png");
 
                 await RespondAsync(embed: embedBuilder.Build());
-            }
-            else
-            {
-                var embedTitle = CreateHalfMastInfoEmbedTitle(halfMastStatus.State, halfMastStatus.IsHalfStaff);
-                var embedBuilder = new EmbedBuilder()
-                    .WithTitle(embedTitle)
-                    .WithFooter($"Source: {halfMastStatus.SourceUrl}",
-                        $"https://raw.githubusercontent.com/flyingfisch/FischBotDiscord-csharp/master/assets/us-flag.png");
 
-                await RespondAsync(embed: embedBuilder.Build());
+                return;
             }
-        }
 
-        private string CreateHalfMastInfoEmbedTitle(string state, bool isHalfMast)
-        {
-            if (isHalfMast)
-            {
-                if (string.IsNullOrEmpty(state))
-                {
-                    return $"The flag is at half mast";
-                }
-                else
-                {
-                    return $"The flag is at half mast in {state}";
-                }
-            }
-            else
-            {
-                if (string.IsNullOrEmpty(state))
-                {
-                    return $"The flag is not at half mast";
-                }
-                else
-                {
-                    return $"The flag is not at half mast in {state}";
-                }
-            }
+            var inactiveEmbedBuilder = new EmbedBuilder()
+                .WithTitle("The U.S. flag is not at half staff")
+                .WithDescription("No active half staff notices were found.")
+                .WithFooter($"Source: {halfMastStatus.SourceUrl}",
+                    $"https://raw.githubusercontent.com/flyingfisch/FischBotDiscord-csharp/master/assets/us-flag.png");
+
+            await RespondAsync(embed: inactiveEmbedBuilder.Build());
         }
     }
 }

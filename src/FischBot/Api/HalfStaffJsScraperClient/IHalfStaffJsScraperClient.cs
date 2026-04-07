@@ -5,6 +5,6 @@ namespace FischBot.Api.HalfStaffJsScraperClient
 {
     public interface IHalfStaffJsScraperClient
     {
-        Task<HalfStaffStatus> GetHalfStaffStatus(string state = "");
+        Task<HalfStaffStatus> GetHalfStaffStatus();
     }
 }
