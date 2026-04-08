@@ -1,4 +1,5 @@
 using System;
+using System.Net.Http;
 using System.Threading.Tasks;
 using Discord;
 using Discord.Interactions;
@@ -20,30 +21,41 @@ namespace FischBot.Modules
         [SlashCommand("apod", "Displays the NASA astronomy picture of the day")]
         public async Task DisplayApod([Summary(description: "Date to query for (optional)")] DateTime? date = null)
         {
-            var apod = await _astronomyService.GetPictureOfTheDay(date);
-
-            var embed = new EmbedBuilder()
-                .WithTitle($"{apod.Date.ToString("d")}: {apod.Name}")
-                .WithDescription(apod.Caption)
-                .WithFooter("NASA Astronomy Picture of the Day");
-            
-            if (apod.MediaType.ToLower() == "video")
+            try
             {
-                var videoEmbed = embed
-                    .WithUrl(apod.Url)
-                    .AddField("Watch Video", apod.Url)
-                    .WithImageUrl(apod.ThumbnailUrl)
-                    .Build();
-                
-                await RespondAsync(embed: videoEmbed);
+                var apod = await _astronomyService.GetPictureOfTheDay(date);
+
+                var embed = new EmbedBuilder()
+                    .WithTitle($"{apod.Date.ToString("d")}: {apod.Name}")
+                    .WithDescription(apod.Caption)
+                    .WithFooter("NASA Astronomy Picture of the Day");
+
+                if (apod.MediaType.ToLower() == "video")
+                {
+                    var videoEmbed = embed
+                        .WithUrl(apod.Url)
+                        .AddField("Watch Video", apod.Url)
+                        .WithImageUrl(apod.ThumbnailUrl)
+                        .Build();
+
+                    await RespondAsync(embed: videoEmbed);
+                }
+                else
+                {
+                    var imageEmbed = embed
+                        .WithImageUrl(apod.Url)
+                        .Build();
+
+                    await RespondAsync(embed: imageEmbed);
+                }
             }
-            else 
+            catch (HttpRequestException)
             {
-                var imageEmbed = embed
-                    .WithImageUrl(apod.Url)
-                    .Build();
+                var requestedDateMessage = date.HasValue
+                    ? $" for {date.Value:MMMM d, yyyy}"
+                    : string.Empty;
 
-                await RespondAsync(embed: imageEmbed);
+                await RespondAsync($"Sorry, NASA's Astronomy Picture of the Day is temporarily unavailable{requestedDateMessage}. Please try again later.", ephemeral: true);
             }
         }
     }
